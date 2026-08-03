@@ -135,6 +135,36 @@
   .modal.on { display:grid; }
   .modal-box { background:var(--surface); border:1px solid var(--border-strong); border-radius:4px; padding:22px; max-width:520px; width:100%; max-height:88vh; overflow:auto; }
   .hint { font-size:12.5px; color:var(--muted); margin:6px 0 0; }
+
+  /* liczniki */
+  .liczniki { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+  .licznik { background:var(--surface-2); border:1px solid var(--border); border-radius:3px; padding:14px; display:flex; flex-direction:column; gap:8px; }
+  .licznik .lab { font-family:var(--mono); font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); }
+  .licznik .ster { display:flex; align-items:center; gap:8px; }
+  .licznik .ster input { font-family:var(--mono); font-size:26px; font-weight:600; text-align:center; padding:4px; width:100%;
+    font-variant-numeric:tabular-nums; background:var(--surface); }
+  .licznik button.plus { font-size:20px; font-weight:600; line-height:1; padding:8px 14px; min-width:46px; }
+  .licznik button.plus:hover { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .licznik button.minus { font-size:16px; padding:8px 11px; }
+  .licznik .why { font-size:12px; color:var(--muted); line-height:1.4; }
+  .licznik.auto .ster { justify-content:center; }
+  .licznik.auto .liczba { font-family:var(--mono); font-size:26px; font-weight:600; font-variant-numeric:tabular-nums; }
+
+  /* lejek */
+  .lejek { display:flex; flex-direction:column; gap:0; }
+  .krok { display:grid; grid-template-columns:1fr auto; gap:14px; align-items:center; padding:13px 16px;
+    background:var(--surface); border:1px solid var(--border); border-bottom:none; }
+  .krok:last-of-type { border-bottom:1px solid var(--border); }
+  .krok-nazwa { font-weight:600; font-size:14.5px; }
+  .krok-sub { font-size:12.5px; color:var(--muted); }
+  .krok-liczba { font-family:var(--mono); font-size:22px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .przejscie { display:grid; grid-template-columns:1fr auto; gap:14px; align-items:center; padding:9px 16px 9px 30px;
+    background:var(--surface-2); border-left:1px solid var(--border); border-right:1px solid var(--border); font-size:13px; }
+  .przejscie .pct { font-family:var(--mono); font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .przejscie.dobry .pct { color:var(--ok); } .przejscie.sredni .pct { color:var(--warn); } .przejscie.zly .pct { color:var(--crit); }
+  .pasek { height:5px; background:var(--surface); border-radius:2px; overflow:hidden; margin-top:5px; }
+  .pasek > i { display:block; height:100%; }
+  .przejscie.dobry .pasek > i { background:var(--ok); } .przejscie.sredni .pasek > i { background:var(--warn); } .przejscie.zly .pasek > i { background:var(--crit); }
   @media (max-width:620px) { nav.tabs a { padding:4px 7px; font-size:10px; } .form-grid { grid-template-columns:1fr; } }
 </style>
 </head>
@@ -146,8 +176,9 @@
     <nav class="tabs" id="tabs">
       <a href="#/dzis">Dziś</a>
       <a href="#/kalendarz">Kalendarz</a>
+      <a href="#/liczby">Liczby</a>
       <a href="#/kasa">Kasa</a>
-      <a href="#/konwersja">Konwersja</a>
+      <a href="#/konwersja">Technika</a>
       <a href="#/materialy">Materiały</a>
       <a href="#/oferta">Oferta</a>
       <a href="#/skrypty">Skrypty</a>
@@ -166,6 +197,11 @@
       <p id="dzis-opis"></p>
     </div>
     <div class="stats" id="dzis-stats"></div>
+
+    <div class="block">
+      <div class="sec-head"><h2>Dzisiejszy wynik</h2><div class="sec-note">Klikaj w trakcie dnia, po każdej rozmowie. Wieczorem nikt tego nie odtworzy z pamięci.</div></div>
+      <div id="dzis-liczniki"></div>
+    </div>
 
     <div class="block">
       <div class="sec-head"><h2>Najbliższe telefony</h2><div class="sec-note">Wpis bez godziny nie wyśle przypomnienia.</div></div>
@@ -221,6 +257,39 @@
     <div class="block">
       <div class="sec-head"><h2 style="font-size:16px">Historia</h2><div class="sec-note">Wpisy z przeszłości — zostają jako ślad.</div></div>
       <div id="k-historia"></div>
+    </div>
+  </section>
+
+  <!-- ============ LICZBY ============ -->
+  <section class="page" id="p-liczby">
+    <div class="sec-head">
+      <h2>Liczby</h2>
+      <div class="sec-note">Cztery etapy lejka. Tam, gdzie procent spada najmocniej, siedzi Twój problem — reszta to szum.</div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:14px">
+        <div class="eyebrow" id="licz-naglowek">Dziś</div>
+        <div class="row">
+          <label class="f" style="flex-direction:row;align-items:center;gap:6px">
+            <span>Dzień:</span><input type="date" id="licz-data" style="width:auto">
+          </label>
+        </div>
+      </div>
+      <div id="licz-przyciski"></div>
+    </div>
+
+    <div class="block">
+      <div class="sec-head">
+        <h2 style="font-size:16px">Skuteczność</h2>
+        <div class="row" id="licz-okresy"></div>
+      </div>
+      <div id="licz-lejek"></div>
+    </div>
+
+    <div class="block">
+      <div class="sec-head"><h2 style="font-size:16px">Dzień po dniu</h2><div class="sec-note">Kliknij dzień, żeby go poprawić.</div></div>
+      <div id="licz-historia"></div>
     </div>
   </section>
 
@@ -397,7 +466,7 @@
 
 /* ---------------- warstwa danych ---------------- */
 const LS_CFG = "impulseo.cfg", LS_DATA = "impulseo.dane";
-const PUSTE = { wersja:1, kalendarz:[], klienci:[] };
+const PUSTE = { wersja:1, kalendarz:[], klienci:[], dni:{} };
 
 let cfg = JSON.parse(localStorage.getItem(LS_CFG) || "null") || { owner:"imszymus", repo:"impulseo-dane", path:"dane.json", token:"" };
 let D = JSON.parse(localStorage.getItem(LS_DATA) || "null") || structuredClone(PUSTE);
@@ -467,7 +536,7 @@ function miesiecyOd(dataStr){
 function wplacone(k){ return (k.wplaty||[]).reduce((s,w)=>s + (Number(w.kwota)||0), 0); }
 
 /* ---------------- routing ---------------- */
-const STRONY = ["dzis","kalendarz","kasa","konwersja","materialy","oferta","skrypty"];
+const STRONY = ["dzis","kalendarz","liczby","kasa","konwersja","materialy","oferta","skrypty"];
 function trasa(){
   let h = (location.hash || "#/dzis").replace("#/","");
   if (!STRONY.includes(h)) h = "dzis";
@@ -577,6 +646,189 @@ function stanPowiadomien(){
     ? "Włączone — działają, dopóki panel jest otwarty. Na telefon i tak leci ntfy."
     : "Wyłączone. Na telefon leci ntfy niezależnie od tego.";
 }
+
+/* ---------------- LICZBY ---------------- */
+const ETAPY = [
+  { k:"rozmowy",  nazwa:"Rozmowy odbyte",       sub:"Ktoś odebrał i doszło do rozmowy",
+    why:"Klikaj po każdym telefonie. Odtwarzane wieczorem z pamięci są zawsze zawyżone." },
+  { k:"umowione", nazwa:"Umówione prezentacje", sub:"Zgodził się na konkretny dzień i godzinę",
+    why:"Bez daty i godziny to nie jest umówiona prezentacja, tylko „odezwę się”." },
+  { k:"odbyte",   nazwa:"Prezentacje odbyte",   sub:"Pokazałeś makietę PRZY kliencie",
+    why:"Wysłany link to nie prezentacja. Stąd wzięło się 39 dem i zero podpisów." },
+  { k:"decyzje",  nazwa:"Prośby o decyzję",     sub:"Padło pytanie „to co, ruszamy?”",
+    why:"Rozmowa bez tego momentu się nie liczy, choćby trwała godzinę." }
+];
+const PROGI = { umowione:[20,10], odbyte:[70,45], decyzje:[85,55], podpisy:[30,15] };
+
+function dzienRek(d){
+  D.dni = D.dni || {};
+  if (!D.dni[d]) D.dni[d] = { rozmowy:0, umowione:0, odbyte:0, decyzje:0 };
+  return D.dni[d];
+}
+function podpisyWDniu(d){ return (D.klienci||[]).filter(k => k.data_podpisu === d).length; }
+
+let okresLicz = "mies";
+const OKRESY = [ ["dzis","Dziś"], ["7","7 dni"], ["mies","Ten miesiąc"], ["all","Wszystko"] ];
+
+function zakres(){
+  const t = new Date(), d0 = dzis();
+  if (okresLicz === "dzis") return [d0, d0];
+  if (okresLicz === "7") { const a = new Date(t); a.setDate(a.getDate()-6); return [a.toISOString().slice(0,10), d0]; }
+  if (okresLicz === "mies") return [d0.slice(0,7) + "-01", d0];
+  return ["0000-01-01", "9999-12-31"];
+}
+
+function sumaOkresu(){
+  const [od, doo] = zakres();
+  const s = { rozmowy:0, umowione:0, odbyte:0, decyzje:0, podpisy:0, dni:0 };
+  Object.entries(D.dni || {}).forEach(([d, v]) => {
+    if (d < od || d > doo) return;
+    ETAPY.forEach(e => s[e.k] += Number(v[e.k]) || 0);
+    if (ETAPY.some(e => Number(v[e.k]) > 0)) s.dni++;
+  });
+  (D.klienci||[]).forEach(k => { const d = k.data_podpisu || ""; if (d >= od && d <= doo) s.podpisy++; });
+  return s;
+}
+
+function klasaPct(pct, klucz){
+  const p = PROGI[klucz] || [50,25];
+  return pct >= p[0] ? "dobry" : pct >= p[1] ? "sredni" : "zly";
+}
+
+function rysujLiczniki(dataDnia, gdzie, kompakt){
+  const r = dzienRek(dataDnia);
+  const podp = podpisyWDniu(dataDnia);
+  const html = `<div class="liczniki">
+    ${ETAPY.map(e => `<div class="licznik">
+      <div class="lab">${e.nazwa}</div>
+      <div class="ster">
+        <button class="minus" data-min="${e.k}" title="odejmij">−</button>
+        <input type="number" min="0" data-pole="${e.k}" value="${Number(r[e.k])||0}">
+        <button class="plus" data-plus="${e.k}" title="dodaj">+1</button>
+      </div>
+      ${kompakt ? "" : `<div class="why">${e.sub}. ${e.why}</div>`}
+    </div>`).join("")}
+    <div class="licznik auto">
+      <div class="lab">Podpisy</div>
+      <div class="ster"><span class="liczba">${podp}</span></div>
+      ${kompakt ? "" : `<div class="why">Liczone automatycznie z zakładki Kasa — dodaj tam umowę, a liczba wskoczy sama.</div>`}
+    </div>
+  </div>`;
+  const el = document.getElementById(gdzie);
+  el.innerHTML = html;
+
+  el.querySelectorAll("[data-plus]").forEach(b => b.onclick = () => {
+    const rr = dzienRek(dataDnia); rr[b.dataset.plus] = (Number(rr[b.dataset.plus])||0) + 1; wyslij(); rysuj();
+  });
+  el.querySelectorAll("[data-min]").forEach(b => b.onclick = () => {
+    const rr = dzienRek(dataDnia); rr[b.dataset.min] = Math.max(0,(Number(rr[b.dataset.min])||0) - 1); wyslij(); rysuj();
+  });
+  el.querySelectorAll("[data-pole]").forEach(i => i.onchange = () => {
+    const rr = dzienRek(dataDnia); rr[i.dataset.pole] = Math.max(0, Number(i.value)||0); wyslij(); rysuj();
+  });
+}
+
+function rysujLejek(){
+  const s = sumaOkresu();
+  const etapy = [
+    { nazwa:"Rozmowy odbyte", n:s.rozmowy, sub:"punkt wyjścia" },
+    { nazwa:"Umówione prezentacje", n:s.umowione, klucz:"umowione", z:s.rozmowy, opis:"z rozmowy na umówioną prezentację" },
+    { nazwa:"Prezentacje odbyte", n:s.odbyte, klucz:"odbyte", z:s.umowione, opis:"z umówionej na faktycznie odbytą" },
+    { nazwa:"Prośby o decyzję", n:s.decyzje, klucz:"decyzje", z:s.odbyte, opis:"z prezentacji na prośbę o decyzję" },
+    { nazwa:"Podpisy", n:s.podpisy, klucz:"podpisy", z:s.decyzje, opis:"z prośby o decyzję na podpis" }
+  ];
+
+  let html = `<div class="lejek">`;
+  etapy.forEach((e, i) => {
+    if (i > 0) {
+      const pct = e.z > 0 ? Math.round(e.n / e.z * 100) : null;
+      const kl = pct === null ? "" : klasaPct(pct, e.klucz);
+      html += `<div class="przejscie ${kl}">
+        <div>${e.opis}<div class="pasek"><i style="width:${Math.min(100, pct||0)}%"></i></div></div>
+        <div class="pct">${pct === null ? "—" : pct + "%"}</div>
+      </div>`;
+    }
+    html += `<div class="krok">
+      <div><div class="krok-nazwa">${e.nazwa}</div><div class="krok-sub">${e.sub || ""}</div></div>
+      <div class="krok-liczba">${e.n}</div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  const calosc = s.rozmowy > 0 ? (s.podpisy / s.rozmowy * 100) : null;
+  html += `<div class="stats" style="margin-top:12px">
+    <div class="stat"><div class="stat-label">Rozmowa → podpis</div>
+      <div class="stat-value">${calosc === null ? "—" : calosc.toFixed(1) + "%"}</div>
+      <div class="stat-note">skuteczność całego lejka</div></div>
+    <div class="stat"><div class="stat-label">Rozmów na jeden podpis</div>
+      <div class="stat-value">${s.podpisy > 0 ? Math.round(s.rozmowy/s.podpisy) : "—"}</div>
+      <div class="stat-note">${s.podpisy > 0 ? "tyle telefonów kosztuje jedna umowa" : "brak podpisu w tym okresie"}</div></div>
+    <div class="stat"><div class="stat-label">Wartość jednej rozmowy</div>
+      <div class="stat-value">${s.rozmowy > 0 && s.podpisy > 0 ? zl(s.podpisy*3178/s.rozmowy) : "—"}</div>
+      <div class="stat-note">średnio, przy 3178 zł netto za klienta</div></div>
+    <div class="stat"><div class="stat-label">Dni z pracą</div>
+      <div class="stat-value">${s.dni}</div>
+      <div class="stat-note">${s.dni > 0 ? "średnio " + (s.rozmowy/s.dni).toFixed(1) + " rozmów dziennie" : "nic jeszcze nie wpisane"}</div></div>
+  </div>`;
+
+  // diagnoza — jedno zdanie o najsłabszym ogniwie
+  const przejscia = etapy.slice(1).filter(e => e.z > 0).map(e => ({ ...e, pct: e.n/e.z*100 }));
+  if (przejscia.length) {
+    const naj = przejscia.reduce((a,b) => {
+      const pa = PROGI[a.klucz][0], pb = PROGI[b.klucz][0];
+      return (a.pct/pa) <= (b.pct/pb) ? a : b;
+    });
+    const strata = Math.max(0, naj.z - naj.n);
+    html += `<div class="banner ${klasaPct(naj.pct,naj.klucz)==="zly"?"crit":"warn"}" style="margin-top:12px">
+      <div class="banner-mark">Wąskie gardło</div>
+      <div><p>Najwięcej tracisz na przejściu <strong>${esc(naj.opis)}</strong> — ${Math.round(naj.pct)}%.
+      ${strata > 0 ? `W tym okresie wypadło tam <strong>${strata}</strong> ${strata===1?"szansa":"szans"}.` : ""}
+      Popraw ten jeden etap, zanim zaczniesz dzwonić więcej — więcej rozmów przy tym samym przecieku to tylko więcej straconej roboty.</p></div>
+    </div>`;
+  } else if (!s.rozmowy) {
+    html += `<div class="banner warn" style="margin-top:12px"><div class="banner-mark">Pusto</div>
+      <div><p>Nic jeszcze nie policzone. Klikaj liczniki w trakcie dnia — bez tego nie da się powiedzieć, czy problem jest w umawianiu, w prezentacji, czy w proszeniu o decyzję.</p></div></div>`;
+  }
+
+  document.getElementById("licz-lejek").innerHTML = html;
+
+  document.getElementById("licz-okresy").innerHTML = OKRESY.map(([k,n]) =>
+    `<button class="mini ${k===okresLicz?"primary":""}" data-okres="${k}">${n}</button>`).join(" ");
+  document.querySelectorAll("[data-okres]").forEach(b => b.onclick = () => { okresLicz = b.dataset.okres; rysujLejek(); });
+}
+
+function rysujHistorie(){
+  const dni = Object.entries(D.dni || {}).filter(([,v]) => ETAPY.some(e => Number(v[e.k]) > 0)).sort((a,b) => b[0].localeCompare(a[0]));
+  const el = document.getElementById("licz-historia");
+  if (!dni.length) { el.innerHTML = `<div class="card"><p style="margin:0;color:var(--muted);font-size:14px">Żaden dzień jeszcze nie policzony.</p></div>`; return; }
+  el.innerHTML = `<div class="tablewrap"><table>
+    <thead><tr><th>Dzień</th><th class="r">Rozmowy</th><th class="r">Umówione</th><th class="r">Odbyte</th><th class="r">Prośby</th><th class="r">Podpisy</th><th class="r">Skuteczność</th><th></th></tr></thead>
+    <tbody>${dni.map(([d,v]) => {
+      const p = podpisyWDniu(d);
+      const sk = v.rozmowy > 0 ? (p/v.rozmowy*100).toFixed(1) + "%" : "—";
+      return `<tr>
+        <td class="date">${esc(d)}</td>
+        <td class="val">${v.rozmowy||0}</td><td class="val">${v.umowione||0}</td>
+        <td class="val">${v.odbyte||0}</td><td class="val">${v.decyzje||0}</td>
+        <td class="val" style="${p>0?"color:var(--ok)":""}">${p}</td>
+        <td class="val">${sk}</td>
+        <td><button class="mini" data-edyt="${d}">popraw</button></td>
+      </tr>`; }).join("")}</tbody></table></div>`;
+  document.querySelectorAll("[data-edyt]").forEach(b => b.onclick = () => {
+    document.getElementById("licz-data").value = b.dataset.edyt;
+    rysujLiczby();
+    document.getElementById("licz-przyciski").scrollIntoView({ behavior:"smooth", block:"center" });
+  });
+}
+
+function rysujLiczby(){
+  const d = document.getElementById("licz-data").value || dzis();
+  document.getElementById("licz-naglowek").textContent = d === dzis() ? "Dziś — " + d : "Poprawiasz dzień " + d;
+  rysujLiczniki(d, "licz-przyciski", false);
+  rysujLejek();
+  rysujHistorie();
+}
+document.getElementById("licz-data").onchange = rysujLiczby;
 
 /* ---------------- KASA ---------------- */
 function liczKase(){
@@ -830,13 +1082,20 @@ function rysujDzis(przysz, naDzis){
 
   const doCelu = Math.max(0, 10 - s.podpisyWTymMies);
   const koniecMies = new Date(t.getFullYear(), t.getMonth()+1, 0).getDate();
+  const rDzis = dzienRek(dzis());
+  const zapisanyOkres = okresLicz; okresLicz = "mies";
+  const sm = sumaOkresu();
+  okresLicz = zapisanyOkres;
+
   document.getElementById("dzis-stats").innerHTML = `
     <div class="stat ${s.podpisyWTymMies===0?"crit":"ok"}">
       <div class="stat-label">Podpisy w tym miesiącu</div><div class="stat-value">${s.podpisyWTymMies} / 10</div>
       <div class="meter"><i style="width:${Math.min(100,s.podpisyWTymMies*10)}%"></i></div>
       <div class="stat-note">${koniecMies - t.getDate()} dni do końca miesiąca</div></div>
-    <div class="stat"><div class="stat-label">Umówione telefony</div><div class="stat-value">${przysz.filter(w=>!w.zrobione).length}</div>
-      <div class="stat-note">${naDzis.length} na dziś</div></div>
+    <div class="stat"><div class="stat-label">Rozmowy dziś</div><div class="stat-value">${rDzis.rozmowy||0}</div>
+      <div class="stat-note">${sm.rozmowy} w tym miesiącu · ${rDzis.decyzje||0} ${(rDzis.decyzje||0)===1?"prośba":"próśb"} o decyzję</div></div>
+    <div class="stat"><div class="stat-label">W kalendarzu</div><div class="stat-value">${przysz.filter(w=>!w.zrobione).length}</div>
+      <div class="stat-note">umówionych na przyszłość · ${naDzis.length} na dziś</div></div>
     <div class="stat ok"><div class="stat-label">Wpłacone w tym miesiącu</div><div class="stat-value">${zl(s.wTymMies)}</div>
       <div class="stat-note">netto, realnie na koncie</div></div>
     <div class="stat ${doCelu>0?"warn":"ok"}"><div class="stat-label">Do celu brakuje</div><div class="stat-value">${zl(doCelu*3178)}</div>
@@ -848,6 +1107,8 @@ function rysuj(){
   const { naDzis, przysz } = rysujKalendarz();
   rysujKase();
   rysujDzis(przysz, naDzis);
+  rysujLiczniki(dzis(), "dzis-liczniki", true);
+  rysujLiczby();
   stanPowiadomien();
 }
 
@@ -882,6 +1143,7 @@ document.getElementById("cfg-wyloguj").onclick = () => {
   trasa();
   document.getElementById("k-data").value = dzis();
   document.getElementById("c-data").value = dzis();
+  document.getElementById("licz-data").value = dzis();
   try {
     const r = await fetch("tresc.json?v=" + Date.now());
     if (r.ok) tresc = await r.json();
