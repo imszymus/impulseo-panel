@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Impulseo — panel sterowania</title>
+<style>
+  :root {
+    --ground:#F7F8FA; --surface:#FFFFFF; --surface-2:#EFF2F6; --border:#DCE1E9; --border-strong:#C3CBD8;
+    --text:#131720; --muted:#5A6473; --accent:#1F3D8F; --accent-soft:#E7ECF8;
+    --ok:#1F7A4D; --ok-soft:#E3F2EA; --warn:#8A5A00; --warn-soft:#FBF0DC; --crit:#A81E17; --crit-soft:#FBE7E5;
+    --sans:"Segoe UI Variable Display","Segoe UI",ui-sans-serif,system-ui,-apple-system,sans-serif;
+    --mono:"Cascadia Mono","Consolas",ui-monospace,"SF Mono",Menlo,monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#0E1116; --surface:#161A21; --surface-2:#1D222B; --border:#272E3A; --border-strong:#3A4351;
+      --text:#E6EAF0; --muted:#949EAD; --accent:#8FA8F2; --accent-soft:#1B2438;
+      --ok:#5FC28C; --ok-soft:#14261D; --warn:#D9A343; --warn-soft:#2A2113; --crit:#F08279; --crit-soft:#2C1614;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#0E1116; --surface:#161A21; --surface-2:#1D222B; --border:#272E3A; --border-strong:#3A4351;
+    --text:#E6EAF0; --muted:#949EAD; --accent:#8FA8F2; --accent-soft:#1B2438;
+    --ok:#5FC28C; --ok-soft:#14261D; --warn:#D9A343; --warn-soft:#2A2113; --crit:#F08279; --crit-soft:#2C1614;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--ground); color:var(--text); font-family:var(--sans); font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 20px 72px; }
+
+  .topbar { position:sticky; top:0; z-index:20; background:var(--ground); border-bottom:1px solid var(--border); margin-bottom:24px; }
+  .topbar-inner { max-width:1080px; margin:0 auto; padding:11px 20px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .brand { font-size:15px; font-weight:650; letter-spacing:-0.01em; white-space:nowrap; }
+  .brand span { color:var(--muted); font-weight:400; }
+  nav.tabs { display:flex; gap:4px; flex-wrap:wrap; margin-left:auto; }
+  nav.tabs a { font-family:var(--mono); font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--muted);
+    text-decoration:none; padding:5px 9px; border-radius:3px; border:1px solid transparent; }
+  nav.tabs a:hover { color:var(--accent); background:var(--surface-2); }
+  nav.tabs a.on { color:var(--accent); background:var(--accent-soft); border-color:color-mix(in srgb,var(--accent) 30%,transparent); }
+  .syncdot { font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted);
+    border:1px solid var(--border-strong); border-radius:2px; padding:3px 7px; cursor:pointer; background:var(--surface); }
+  .syncdot.ok { color:var(--ok); border-color:color-mix(in srgb,var(--ok) 45%,transparent); }
+  .syncdot.bad { color:var(--crit); border-color:color-mix(in srgb,var(--crit) 45%,transparent); }
+
+  h1 { font-size:clamp(20px,3vw,26px); line-height:1.25; font-weight:640; letter-spacing:-0.02em; margin:0; text-wrap:balance; }
+  h2 { font-size:18px; font-weight:640; letter-spacing:-0.015em; margin:0; }
+  h3 { font-size:15px; font-weight:640; margin:0 0 4px; }
+  .eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .sec-head { display:flex; align-items:baseline; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+  .sec-note { font-size:13px; color:var(--muted); }
+  section.page { display:none; }
+  section.page.on { display:block; }
+  .block { margin-top:32px; }
+
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:18px 20px; }
+  .cards { display:grid; gap:12px; }
+  .cards.two { grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); }
+  .today { background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent); border-radius:3px;
+    padding:20px 22px; display:flex; flex-direction:column; gap:9px; }
+  .today p { color:var(--muted); max-width:64ch; margin:0; }
+
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; margin-top:12px; }
+  .stat { background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:14px 16px; display:flex; flex-direction:column; gap:4px; }
+  .stat-label { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .stat-value { font-family:var(--mono); font-size:24px; font-weight:600; font-variant-numeric:tabular-nums; letter-spacing:-0.02em; line-height:1.15; }
+  .stat-note { font-size:12.5px; color:var(--muted); }
+  .stat.ok .stat-value { color:var(--ok); } .stat.warn .stat-value { color:var(--warn); } .stat.crit .stat-value { color:var(--crit); }
+  .meter { height:4px; background:var(--surface-2); border-radius:2px; overflow:hidden; margin-top:2px; }
+  .meter > i { display:block; height:100%; background:var(--accent); }
+
+  .banner { border-radius:3px; padding:13px 16px; display:flex; gap:12px; align-items:flex-start; border:1px solid; }
+  .banner.crit { background:var(--crit-soft); border-color:color-mix(in srgb,var(--crit) 40%,transparent); }
+  .banner.warn { background:var(--warn-soft); border-color:color-mix(in srgb,var(--warn) 40%,transparent); }
+  .banner.ok { background:var(--ok-soft); border-color:color-mix(in srgb,var(--ok) 40%,transparent); }
+  .banner-mark { font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; white-space:nowrap; padding-top:2px; }
+  .banner.crit .banner-mark { color:var(--crit); } .banner.warn .banner-mark { color:var(--warn); } .banner.ok .banner-mark { color:var(--ok); }
+  .banner p { margin:0; font-size:14px; } .banner p + p { margin-top:6px; }
+
+  .tablewrap { overflow-x:auto; border:1px solid var(--border); border-radius:3px; background:var(--surface); }
+  table { border-collapse:collapse; width:100%; min-width:640px; }
+  th,td { text-align:left; padding:10px 13px; border-bottom:1px solid var(--border); vertical-align:top; }
+  th { font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:500; background:var(--surface-2); }
+  tbody tr:last-child td { border-bottom:none; }
+  td.lead { font-weight:600; }
+  td.date,td.val { font-family:var(--mono); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  td.val { text-align:right; }
+  th.r { text-align:right; }
+  tr.past td { opacity:.5; }
+  tr.soon td:first-child { box-shadow:inset 3px 0 0 var(--warn); }
+  tr.now td:first-child { box-shadow:inset 3px 0 0 var(--crit); }
+
+  .chip { display:inline-block; font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+    padding:2px 7px; border-radius:2px; border:1px solid; white-space:nowrap; }
+  .chip.ok { color:var(--ok); border-color:color-mix(in srgb,var(--ok) 40%,transparent); background:var(--ok-soft); }
+  .chip.warn { color:var(--warn); border-color:color-mix(in srgb,var(--warn) 40%,transparent); background:var(--warn-soft); }
+  .chip.crit { color:var(--crit); border-color:color-mix(in srgb,var(--crit) 40%,transparent); background:var(--crit-soft); }
+  .chip.neutral { color:var(--muted); border-color:var(--border-strong); background:var(--surface-2); }
+
+  button, .btn { font-family:var(--sans); font-size:13.5px; background:var(--surface); color:var(--text);
+    border:1px solid var(--border-strong); border-radius:3px; padding:7px 13px; cursor:pointer; }
+  button:hover { border-color:var(--accent); color:var(--accent); }
+  button.primary { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600; }
+  button.primary:hover { opacity:.9; color:#fff; }
+  button.mini { font-size:11.5px; padding:3px 8px; }
+  button.danger:hover { border-color:var(--crit); color:var(--crit); }
+  .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+
+  label.f { display:flex; flex-direction:column; gap:4px; font-size:12.5px; color:var(--muted); }
+  input,select,textarea { font-family:var(--sans); font-size:14px; background:var(--surface); color:var(--text);
+    border:1px solid var(--border-strong); border-radius:3px; padding:7px 9px; width:100%; }
+  input[type="date"],input[type="time"],input[type="number"] { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+  textarea { min-height:64px; resize:vertical; }
+  .form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; align-items:end; }
+
+  ul.plain { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:7px; }
+  ul.plain li { padding-left:16px; position:relative; font-size:14px; }
+  ul.plain li::before { content:""; position:absolute; left:0; top:9px; width:5px; height:1px; background:var(--border-strong); }
+  ul.plain li.no::before { background:var(--crit); } ul.plain li.yes::before { background:var(--ok); }
+
+  .script { background:var(--surface-2); border:1px solid var(--border); border-radius:3px; margin-top:8px; position:relative; }
+  .script pre { font-family:var(--mono); font-size:13px; line-height:1.6; margin:0; padding:13px 60px 13px 15px; white-space:pre-wrap; word-break:break-word; }
+  .copy { position:absolute; top:8px; right:8px; font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase;
+    background:var(--surface); color:var(--muted); border:1px solid var(--border-strong); border-radius:2px; padding:3px 7px; cursor:pointer; }
+  .copy.done { color:var(--ok); border-color:var(--ok); }
+
+  .obj { border-top:1px solid var(--border); padding-top:16px; margin-top:16px; }
+  .obj:first-child { border-top:none; padding-top:0; margin-top:0; }
+  .obj .said { font-family:var(--mono); font-size:12px; color:var(--muted); }
+  .obj > p { margin:6px 0 0; font-size:14px; }
+  code.inl { font-family:var(--mono); font-size:.88em; background:var(--surface-2); border:1px solid var(--border); border-radius:2px; padding:1px 4px; }
+  a { color:var(--accent); }
+  .foot { margin-top:44px; padding-top:18px; border-top:1px solid var(--border); color:var(--muted); font-size:13px; }
+  :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .modal { position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; place-items:center; z-index:50; padding:20px; }
+  .modal.on { display:grid; }
+  .modal-box { background:var(--surface); border:1px solid var(--border-strong); border-radius:4px; padding:22px; max-width:520px; width:100%; max-height:88vh; overflow:auto; }
+  .hint { font-size:12.5px; color:var(--muted); margin:6px 0 0; }
+  @media (max-width:620px) { nav.tabs a { padding:4px 7px; font-size:10px; } .form-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">Impulseo <span>· panel</span></div>
+    <nav class="tabs" id="tabs">
+      <a href="#/dzis">Dziś</a>
+      <a href="#/kalendarz">Kalendarz</a>
+      <a href="#/kasa">Kasa</a>
+      <a href="#/konwersja">Konwersja</a>
+      <a href="#/materialy">Materiały</a>
+      <a href="#/oferta">Oferta</a>
+      <a href="#/skrypty">Skrypty</a>
+    </nav>
+    <button class="syncdot" id="syncbtn" title="Stan zapisu danych">…</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ============ DZIŚ ============ -->
+  <section class="page" id="p-dzis">
+    <div class="today">
+      <div class="eyebrow" id="dzis-data">—</div>
+      <h1 id="dzis-naglowek">—</h1>
+      <p id="dzis-opis"></p>
+    </div>
+    <div class="stats" id="dzis-stats"></div>
+
+    <div class="block">
+      <div class="sec-head"><h2>Najbliższe telefony</h2><div class="sec-note">Wpis bez godziny nie wyśle przypomnienia.</div></div>
+      <div id="dzis-kalendarz"></div>
+    </div>
+
+    <div class="block">
+      <div class="sec-head"><h2>Dziś do przerobienia</h2></div>
+      <div class="cards two">
+        <div class="card">
+          <div class="eyebrow" style="margin-bottom:8px">Insight dnia</div>
+          <h3 id="dzis-insight-tytul">—</h3>
+          <p style="margin:4px 0 0;font-size:14px;color:var(--muted)" id="dzis-insight-tekst"></p>
+          <div class="row" style="margin-top:12px"><a class="btn" href="#/konwersja" style="text-decoration:none">Otwórz</a></div>
+        </div>
+        <div class="card">
+          <div class="eyebrow" style="margin-bottom:8px">Materiał dnia</div>
+          <h3 id="dzis-mat-tytul">—</h3>
+          <p style="margin:4px 0 0;font-size:14px;color:var(--muted)" id="dzis-mat-po-co"></p>
+          <div class="row" style="margin-top:12px"><a class="btn" href="#/materialy" style="text-decoration:none">Otwórz</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ KALENDARZ ============ -->
+  <section class="page" id="p-kalendarz">
+    <div class="sec-head">
+      <h2>Kalendarz</h2>
+      <div class="sec-note">Każdy wpis leci na telefon przez ntfy godzinę wcześniej — i tu, jeśli panel jest otwarty.</div>
+    </div>
+
+    <div class="card">
+      <div class="form-grid">
+        <label class="f">Data<input type="date" id="k-data"></label>
+        <label class="f">Godzina<input type="time" id="k-godz"></label>
+        <label class="f">Klient<input type="text" id="k-klient" placeholder="Moga Kamieniarstwo"></label>
+        <label class="f">Co robimy<input type="text" id="k-co" placeholder="Telefon po decyzję"></label>
+        <label class="f">Telefon<input type="tel" id="k-tel" placeholder="opcjonalnie"></label>
+        <button class="primary" id="k-dodaj">Dodaj wpis</button>
+      </div>
+      <p class="hint" id="k-alert"></p>
+    </div>
+
+    <div class="block">
+      <div class="row" style="margin-bottom:10px">
+        <button class="mini" id="k-powiadom">Włącz przypomnienia w przeglądarce</button>
+        <span class="hint" id="k-powiadom-stan"></span>
+      </div>
+      <div id="k-lista"></div>
+    </div>
+
+    <div class="block">
+      <div class="sec-head"><h2 style="font-size:16px">Historia</h2><div class="sec-note">Wpisy z przeszłości — zostają jako ślad.</div></div>
+      <div id="k-historia"></div>
+    </div>
+  </section>
+
+  <!-- ============ KASA ============ -->
+  <section class="page" id="p-kasa">
+    <div class="sec-head">
+      <h2>Kasa</h2>
+      <div class="sec-note">Wszystkie kwoty netto. Prognoza liczy tylko pieniądze już zaklepane umową.</div>
+    </div>
+
+    <div class="stats" id="kasa-stats"></div>
+
+    <div class="block">
+      <div class="sec-head"><h2 style="font-size:16px">Prognoza — tylko pewne pieniądze</h2></div>
+      <div class="card" id="kasa-prognoza"></div>
+    </div>
+
+    <div class="block">
+      <div class="sec-head"><h2 style="font-size:16px">Dodaj podpisaną umowę</h2></div>
+      <div class="card">
+        <div class="form-grid">
+          <label class="f">Klient<input type="text" id="c-nazwa" placeholder="Wulkanizacja Nowak"></label>
+          <label class="f">Co<select id="c-produkt">
+            <option value="Strona">Strona</option><option value="Sklep">Sklep</option><option value="Inne">Inne</option>
+          </select></label>
+          <label class="f">Wartość netto<input type="number" id="c-netto" value="1990" step="10"></label>
+          <label class="f">Abonament netto/mies<input type="number" id="c-abo" value="99" step="1"></label>
+          <label class="f">Data podpisu<input type="date" id="c-data"></label>
+          <button class="primary" id="c-dodaj">Dodaj</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="sec-head"><h2 style="font-size:16px">Klienci</h2><div class="sec-note">Kliknij klienta, żeby dopisać wpłatę.</div></div>
+      <div id="kasa-lista"></div>
+    </div>
+  </section>
+
+  <!-- ============ KONWERSJA ============ -->
+  <section class="page" id="p-konwersja">
+    <div class="sec-head">
+      <h2>Konwersja</h2>
+      <div class="sec-note">Jedna rzecz dziennie, wdrożona w rozmowie tego samego dnia. Czytanie bez użycia nic nie daje.</div>
+    </div>
+    <div id="konw-dzis"></div>
+    <div class="block">
+      <div class="sec-head"><h2 style="font-size:16px">Cały zapas</h2><div class="sec-note">Trzydzieści technik. Gdy się skończą, powiedz Claude'owi: dopisz kolejne.</div></div>
+      <div id="konw-lista"></div>
+    </div>
+  </section>
+
+  <!-- ============ MATERIAŁY ============ -->
+  <section class="page" id="p-materialy">
+    <div class="sec-head">
+      <h2>Materiały</h2>
+      <div class="sec-note">Jedna pozycja dziennie. Podcasty w auto między telefonami, artykuły wieczorem.</div>
+    </div>
+    <div id="mat-dzis"></div>
+    <div class="block">
+      <div class="sec-head"><h2 style="font-size:16px">Cały zapas</h2></div>
+      <div id="mat-lista"></div>
+    </div>
+  </section>
+
+  <!-- ============ OFERTA ============ -->
+  <section class="page" id="p-oferta">
+    <div class="sec-head"><h2>Oferta</h2><div class="sec-note">Nic tu nie jest „do dogadania”. Pytanie spoza listy to dopłata albo odmowa.</div></div>
+    <div class="card" style="padding:0">
+      <div class="stats" style="margin:0;gap:0;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+        <div class="stat" style="border:none;border-right:1px solid var(--border);border-radius:0">
+          <div class="stat-label">Strona</div><div class="stat-value">1 990 zł</div><div class="stat-note">netto · 2 447,70 brutto</div></div>
+        <div class="stat" style="border:none;border-right:1px solid var(--border);border-radius:0">
+          <div class="stat-label">Abonament</div><div class="stat-value">99 zł</div><div class="stat-note">netto/mies · min. 12 miesięcy</div></div>
+        <div class="stat" style="border:none;border-right:1px solid var(--border);border-radius:0">
+          <div class="stat-label">Termin</div><div class="stat-value">14 dni</div><div class="stat-note">roboczych od podpisu i wpłaty</div></div>
+        <div class="stat" style="border:none;border-radius:0">
+          <div class="stat-label">Płatność</div><div class="stat-value">995 + 995</div><div class="stat-note">netto · podpis / oddanie</div></div>
+      </div>
+    </div>
+    <div class="cards two" style="margin-top:12px">
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:10px">W cenie</div>
+        <ul class="plain">
+          <li class="yes">Strona do 5 podstron + wersja mobilna</li>
+          <li class="yes">Teksty pisane przez nas — klient nic nie pisze</li>
+          <li class="yes">Galeria, formularz kontaktowy, mapa dojazdu</li>
+          <li class="yes">Domena, hosting i SSL na pierwszy rok</li>
+          <li class="yes">Wizytówka Google — założenie i optymalizacja</li>
+          <li class="yes">Polityka prywatności i cookies</li>
+          <li class="yes">Jedna runda poprawek</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:10px">Poza ceną</div>
+        <ul class="plain">
+          <li class="no">Każda podstrona ponad 5 — 250 zł netto</li>
+          <li class="no">Zdjęcia i logo — dostarcza klient</li>
+          <li class="no">Znaczące zmiany treści po odbiorze — wycena osobno</li>
+          <li class="no">Sklep — 3 900 zł netto, osobny produkt</li>
+        </ul>
+        <div class="banner warn" style="margin-top:14px">
+          <div class="banner-mark">Mów</div>
+          <div><p>„1990 netto, czyli 2447,70 z VAT-em.” Obie liczby, nigdy przemilczane.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="eyebrow" style="margin-bottom:10px">Abonament 99 zł — wymień jednym tchem</div>
+      <ul class="plain">
+        <li>Hosting i SSL, domena po pierwszym roku</li>
+        <li>Codzienne kopie zapasowe</li>
+        <li>Aktualizacje i bezpieczeństwo</li>
+        <li>Drobne poprawki treści — godziny, cennik, dane kontaktowe, wymiana zdjęć</li>
+        <li>Opieka nad wizytówką Google</li>
+      </ul>
+      <p style="margin:14px 0 0;font-size:14px"><strong>Nigdy nie mów „nie musimy Pana obsługiwać”.</strong> To zdanie kasuje powtarzalny przychód. Zamiast tego: „Strona i domena są Pana — gdyby chciał Pan przejść gdzie indziej, przekazujemy pliki i domenę w 14 dni”.</p>
+    </div>
+    <div class="banner crit" style="margin-top:12px">
+      <div class="banner-mark">Stop</div>
+      <div><p><strong>Wzór umowy nie idzie do żadnego klienta</strong> — ma 9 rozjazdów z ofertą. Do czasu poprawek domykasz Zamówieniem. Lista w <code class="inl">impulseo\umowa-poprawki.md</code>.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ SKRYPTY ============ -->
+  <section class="page" id="p-skrypty">
+    <div class="sec-head"><h2>Skrypty</h2><div class="sec-note">Uznaj → Odwróć → Poproś. Odpowiedź bez prośby o decyzję kończy się kiwnięciem głową.</div></div>
+    <div class="card" id="skrypty-lista"></div>
+  </section>
+
+  <div class="foot">
+    <p style="margin:0">Dane siedzą w prywatnym repo <code class="inl">impulseo-dane</code> — ten sam plik czyta panel na telefonie, panel na kompie i przypominacz. Kod panelu jest publiczny, dane nie.</p>
+  </div>
+</div>
+
+<!-- ustawienia -->
+<div class="modal" id="modal-cfg">
+  <div class="modal-box">
+    <h2 style="margin-bottom:6px">Połączenie z danymi</h2>
+    <p class="hint" style="margin-bottom:14px">Token wklejasz raz na każdym urządzeniu. Zostaje tylko w tej przeglądarce — nie idzie do repo ani nigdzie indziej.</p>
+    <label class="f" style="margin-bottom:10px">Właściciel repo<input type="text" id="cfg-owner" placeholder="imszymus"></label>
+    <label class="f" style="margin-bottom:10px">Repo z danymi<input type="text" id="cfg-repo" placeholder="impulseo-dane"></label>
+    <label class="f" style="margin-bottom:10px">Token dostępu<input type="password" id="cfg-token" placeholder="github_pat_..."></label>
+    <div class="row" style="margin-top:16px">
+      <button class="primary" id="cfg-zapisz">Zapisz i połącz</button>
+      <button id="cfg-zamknij">Zamknij</button>
+      <button class="danger" id="cfg-wyloguj" style="margin-left:auto">Usuń token</button>
+    </div>
+    <p class="hint" id="cfg-stan" style="margin-top:12px"></p>
+  </div>
+</div>
+
+<!-- wpłaty -->
+<div class="modal" id="modal-wplata">
+  <div class="modal-box">
+    <h2 style="margin-bottom:4px" id="w-klient">—</h2>
+    <p class="hint" id="w-podsum" style="margin-bottom:14px"></p>
+    <div id="w-lista" style="margin-bottom:14px"></div>
+    <div class="form-grid">
+      <label class="f">Data wpłaty<input type="date" id="w-data"></label>
+      <label class="f">Kwota netto<input type="number" id="w-kwota" step="10" placeholder="995"></label>
+      <label class="f">Opis<input type="text" id="w-opis" placeholder="zaliczka"></label>
+      <button class="primary" id="w-dodaj">Dopisz wpłatę</button>
+    </div>
+    <div class="row" style="margin-top:16px">
+      <button id="w-zamknij">Zamknij</button>
+      <button class="danger" id="w-usun" style="margin-left:auto">Usuń klienta</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ---------------- warstwa danych ---------------- */
+const LS_CFG = "impulseo.cfg", LS_DATA = "impulseo.dane";
+const PUSTE = { wersja:1, kalendarz:[], klienci:[] };
+
+let cfg = JSON.parse(localStorage.getItem(LS_CFG) || "null") || { owner:"imszymus", repo:"impulseo-dane", path:"dane.json", token:"" };
+let D = JSON.parse(localStorage.getItem(LS_DATA) || "null") || structuredClone(PUSTE);
+let sha = null, tresc = { insighty:[], materialy:[] }, stanSync = "local";
+
+function b64d(b64){ const bin = atob(String(b64).replace(/\s/g,"")); const u = Uint8Array.from(bin, c=>c.charCodeAt(0)); return new TextDecoder().decode(u); }
+function b64e(str){ const u = new TextEncoder().encode(str); let bin=""; u.forEach(b=>bin+=String.fromCharCode(b)); return btoa(bin); }
+const ghUrl = () => `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${cfg.path}`;
+const ghHead = () => ({ Authorization:`Bearer ${cfg.token}`, Accept:"application/vnd.github+json", "X-GitHub-Api-Version":"2022-11-28" });
+
+function zapiszLokalnie(){ localStorage.setItem(LS_DATA, JSON.stringify(D)); }
+function setSync(s, tekst){
+  stanSync = s;
+  const b = document.getElementById("syncbtn");
+  b.className = "syncdot" + (s==="ok" ? " ok" : s==="err" ? " bad" : "");
+  b.textContent = tekst || (s==="ok" ? "zapisane" : s==="err" ? "błąd" : "lokalnie");
+}
+
+async function pobierz(){
+  if (!cfg.token) { setSync("local","tylko ten sprzęt"); return; }
+  try {
+    setSync("", "wczytuję…");
+    const r = await fetch(ghUrl(), { headers: ghHead(), cache:"no-store" });
+    if (r.status === 404) { sha = null; await wyslij(); return; }
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    sha = j.sha;
+    const parsed = JSON.parse(b64d(j.content));
+    D = Object.assign(structuredClone(PUSTE), parsed);
+    zapiszLokalnie();
+    setSync("ok","zapisane");
+    rysuj();
+  } catch (e) { setSync("err", "błąd: " + e.message); }
+}
+
+let kolejka = null;
+async function wyslij(){
+  zapiszLokalnie();
+  if (!cfg.token) { setSync("local","tylko ten sprzęt"); return; }
+  if (kolejka) { kolejka = true; return; }
+  kolejka = true;
+  try {
+    setSync("", "zapisuję…");
+    const body = { message:"panel: aktualizacja " + new Date().toISOString(), content: b64e(JSON.stringify(D, null, 2)) };
+    if (sha) body.sha = sha;
+    const r = await fetch(ghUrl(), { method:"PUT", headers:{...ghHead(), "Content-Type":"application/json"}, body: JSON.stringify(body) });
+    if (r.status === 409 || r.status === 422) { await pobierz(); setSync("err","kolizja — odświeżono, zapisz raz jeszcze"); return; }
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    sha = j.content.sha;
+    setSync("ok","zapisane");
+  } catch (e) { setSync("err","błąd: " + e.message); }
+  finally { kolejka = null; }
+}
+
+/* ---------------- pomocnicze ---------------- */
+const dzis = () => new Date().toISOString().slice(0,10);
+const uid = () => Math.random().toString(36).slice(2,10);
+const zl = n => (Math.round(n)).toLocaleString("pl-PL") + " zł";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function dtWpisu(w){ return new Date(w.data + "T" + (w.godzina || "09:00") + ":00"); }
+function miesiecyOd(dataStr){
+  if (!dataStr) return 0;
+  const a = new Date(dataStr), b = new Date();
+  return Math.max(0, (b.getFullYear()-a.getFullYear())*12 + (b.getMonth()-a.getMonth()));
+}
+function wplacone(k){ return (k.wplaty||[]).reduce((s,w)=>s + (Number(w.kwota)||0), 0); }
+
+/* ---------------- routing ---------------- */
+const STRONY = ["dzis","kalendarz","kasa","konwersja","materialy","oferta","skrypty"];
+function trasa(){
+  let h = (location.hash || "#/dzis").replace("#/","");
+  if (!STRONY.includes(h)) h = "dzis";
+  STRONY.forEach(s => document.getElementById("p-"+s).classList.toggle("on", s===h));
+  document.querySelectorAll("#tabs a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#/"+h));
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange", trasa);
+
+/* ---------------- KALENDARZ ---------------- */
+function wpisyPosortowane(){ return [...(D.kalendarz||[])].sort((a,b)=> dtWpisu(a) - dtWpisu(b)); }
+
+function rysujKalendarz(){
+  const teraz = new Date();
+  const wsz = wpisyPosortowane();
+  const przysz = wsz.filter(w => dtWpisu(w) >= new Date(teraz.getFullYear(),teraz.getMonth(),teraz.getDate()));
+  const hist = wsz.filter(w => dtWpisu(w) < new Date(teraz.getFullYear(),teraz.getMonth(),teraz.getDate())).reverse();
+
+  document.getElementById("k-lista").innerHTML = tabelaKal(przysz, true);
+  document.getElementById("k-historia").innerHTML = hist.length ? tabelaKal(hist.slice(0,20), false)
+    : `<div class="card"><p style="margin:0;color:var(--muted);font-size:14px">Nic jeszcze nie minęło.</p></div>`;
+
+  const naDzis = przysz.filter(w => w.data === dzis());
+  const el = document.getElementById("dzis-kalendarz");
+  const nast = przysz.slice(0,5);
+  el.innerHTML = nast.length ? tabelaKal(nast, true)
+    : `<div class="banner warn"><div class="banner-mark">Pusto</div><div><p>Ani jednego umówionego telefonu. To nie jest wolny dzień — to jest dzień bez szans na podpis.</p></div></div>`;
+  podepnijKal();
+  return { naDzis, przysz };
+}
+
+function tabelaKal(lista, akcje){
+  if (!lista.length) return `<div class="card"><p style="margin:0;color:var(--muted);font-size:14px">Brak wpisów.</p></div>`;
+  const teraz = new Date();
+  const rows = lista.map(w => {
+    const dt = dtWpisu(w);
+    const zaMin = (dt - teraz) / 60000;
+    const kl = w.zrobione ? "past" : (zaMin < 0 ? "past" : zaMin <= 60 ? "now" : zaMin <= 60*24 ? "soon" : "");
+    const status = w.zrobione ? `<span class="chip ok">zrobione</span>`
+      : zaMin < 0 ? `<span class="chip crit">po terminie</span>`
+      : zaMin <= 60 ? `<span class="chip crit">za chwilę</span>`
+      : zaMin <= 60*24 ? `<span class="chip warn">dziś/jutro</span>` : `<span class="chip neutral">czeka</span>`;
+    return `<tr class="${kl}">
+      <td class="date">${esc(w.data)}<br><strong>${esc(w.godzina||"—")}</strong></td>
+      <td class="lead">${esc(w.klient)}${w.telefon?`<br><span style="font-family:var(--mono);font-size:12px;color:var(--muted)">${esc(w.telefon)}</span>`:""}</td>
+      <td>${esc(w.co)}</td>
+      <td>${status}</td>
+      ${akcje ? `<td style="white-space:nowrap">
+        <button class="mini" data-kal-zrob="${w.id}">${w.zrobione?"cofnij":"zrobione"}</button>
+        <button class="mini danger" data-kal-usun="${w.id}">usuń</button></td>` : `<td></td>`}
+    </tr>`;
+  }).join("");
+  return `<div class="tablewrap"><table><thead><tr><th>Kiedy</th><th>Klient</th><th>Co robimy</th><th>Stan</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function podepnijKal(){
+  document.querySelectorAll("[data-kal-zrob]").forEach(b => b.onclick = () => {
+    const w = D.kalendarz.find(x=>x.id===b.dataset.kalZrob); if(!w) return;
+    w.zrobione = !w.zrobione; wyslij(); rysuj();
+  });
+  document.querySelectorAll("[data-kal-usun]").forEach(b => b.onclick = () => {
+    D.kalendarz = D.kalendarz.filter(x=>x.id!==b.dataset.kalUsun); wyslij(); rysuj();
+  });
+}
+
+document.getElementById("k-dodaj").onclick = () => {
+  const data = document.getElementById("k-data").value;
+  const godzina = document.getElementById("k-godz").value;
+  const klient = document.getElementById("k-klient").value.trim();
+  const co = document.getElementById("k-co").value.trim();
+  const telefon = document.getElementById("k-tel").value.trim();
+  const alert = document.getElementById("k-alert");
+  if (!data || !klient) { alert.textContent = "Data i klient są obowiązkowe."; return; }
+  if (!godzina) { alert.textContent = "Bez godziny przypomnienie nie poleci. Wpisz konkretną godzinę."; return; }
+  D.kalendarz.push({ id:uid(), data, godzina, klient, co: co || "Telefon", telefon, zrobione:false });
+  alert.textContent = "Wpisane: " + klient + ", " + data + " " + godzina + ". Przypomnienie godzinę wcześniej.";
+  ["k-klient","k-co","k-tel"].forEach(i=>document.getElementById(i).value="");
+  wyslij(); rysuj();
+};
+
+/* powiadomienia w przeglądarce */
+const LS_POW = "impulseo.powiadomione";
+let powiadomione = new Set(JSON.parse(localStorage.getItem(LS_POW) || "[]"));
+function sprawdzPowiadomienia(){
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+  const teraz = new Date();
+  (D.kalendarz||[]).forEach(w => {
+    if (w.zrobione) return;
+    const min = (dtWpisu(w) - teraz) / 60000;
+    if (min <= 60 && min > 0 && !powiadomione.has(w.id)) {
+      new Notification("Impulseo — za " + Math.round(min) + " min", { body: w.klient + " · " + (w.co||"telefon") + " · " + w.godzina });
+      powiadomione.add(w.id);
+      localStorage.setItem(LS_POW, JSON.stringify([...powiadomione]));
+    }
+  });
+}
+document.getElementById("k-powiadom").onclick = async () => {
+  if (!("Notification" in window)) { document.getElementById("k-powiadom-stan").textContent = "Ta przeglądarka nie umie powiadomień."; return; }
+  const p = await Notification.requestPermission();
+  stanPowiadomien();
+  if (p === "granted") new Notification("Impulseo", { body: "Przypomnienia włączone na tym urządzeniu." });
+};
+function stanPowiadomien(){
+  const el = document.getElementById("k-powiadom-stan");
+  if (!("Notification" in window)) { el.textContent = "niedostępne w tej przeglądarce"; return; }
+  el.textContent = Notification.permission === "granted"
+    ? "Włączone — działają, dopóki panel jest otwarty. Na telefon i tak leci ntfy."
+    : "Wyłączone. Na telefon leci ntfy niezależnie od tego.";
+}
+
+/* ---------------- KASA ---------------- */
+function liczKase(){
+  const kl = D.klienci || [];
+  const podpisane = kl.reduce((s,k)=> s + (Number(k.netto)||0), 0);
+  const wplyw = kl.reduce((s,k)=> s + wplacone(k), 0);
+  const zalega = kl.reduce((s,k)=> s + Math.max(0, (Number(k.netto)||0) - wplacone(k)), 0);
+
+  let doWplatyJednorazowe = 0, aboPozostale = 0, mrr = 0;
+  kl.forEach(k => {
+    doWplatyJednorazowe += Math.max(0, (Number(k.netto)||0) - wplacone(k));
+    const abo = Number(k.abonament)||0;
+    const minione = miesiecyOd(k.data_podpisu);
+    const zostalo = Math.max(0, 12 - minione);
+    aboPozostale += abo * zostalo;
+    if (zostalo > 0) mrr += abo;
+  });
+
+  const m = dzis().slice(0,7);
+  const wTymMies = kl.reduce((s,k)=> s + (k.wplaty||[]).filter(w=>String(w.data||"").startsWith(m)).reduce((a,w)=>a+(Number(w.kwota)||0),0), 0);
+  const podpisyWTymMies = kl.filter(k => String(k.data_podpisu||"").startsWith(m)).length;
+
+  return { kl, podpisane, wplyw, zalega, doWplatyJednorazowe, aboPozostale, mrr, wTymMies, podpisyWTymMies,
+           pewnePrzyszle: doWplatyJednorazowe + aboPozostale };
+}
+
+function rysujKase(){
+  const s = liczKase();
+  document.getElementById("kasa-stats").innerHTML = `
+    <div class="stat ok"><div class="stat-label">Wpłacone</div><div class="stat-value">${zl(s.wplyw)}</div><div class="stat-note">netto, realnie na koncie</div></div>
+    <div class="stat"><div class="stat-label">Podpisane</div><div class="stat-value">${zl(s.podpisane)}</div><div class="stat-note">${s.kl.length} ${s.kl.length===1?"umowa":"umów"} · bez abonamentów</div></div>
+    <div class="stat ${s.zalega>0?"warn":""}"><div class="stat-label">Zalega</div><div class="stat-value">${zl(s.zalega)}</div><div class="stat-note">podpisane, jeszcze niewpłacone</div></div>
+    <div class="stat"><div class="stat-label">Abonament / mies</div><div class="stat-value">${zl(s.mrr)}</div><div class="stat-note">powtarzalny przychód netto</div></div>`;
+
+  const doCelu = Math.max(0, 10 - s.podpisyWTymMies);
+  document.getElementById("kasa-prognoza").innerHTML = `
+    <div class="stats" style="margin:0">
+      <div class="stat" style="border:none;padding:0 16px 0 0">
+        <div class="stat-label">Jeszcze wpłynie z podpisanych</div>
+        <div class="stat-value">${zl(s.pewnePrzyszle)}</div>
+        <div class="stat-note">${zl(s.doWplatyJednorazowe)} z umów + ${zl(s.aboPozostale)} abonamentów do końca 12 miesięcy</div>
+      </div>
+      <div class="stat" style="border:none;padding:0 16px">
+        <div class="stat-label">Rok razem</div>
+        <div class="stat-value">${zl(s.wplyw + s.pewnePrzyszle)}</div>
+        <div class="stat-note">wpłacone + zaklepane. Żadnych założeń o nowych klientach.</div>
+      </div>
+      <div class="stat" style="border:none;padding:0 16px">
+        <div class="stat-label">W tym miesiącu</div>
+        <div class="stat-value">${zl(s.wTymMies)}</div>
+        <div class="stat-note">${s.podpisyWTymMies} / 10 podpisów · brakuje ${doCelu}</div>
+      </div>
+    </div>
+    ${doCelu > 0 ? `<div class="banner ${s.podpisyWTymMies===0?"crit":"warn"}" style="margin-top:16px">
+      <div class="banner-mark">Różnica</div>
+      <div><p>Do celu brakuje <strong>${doCelu} ${doCelu===1?"podpisu":"podpisów"}</strong>, czyli <strong>${zl(doCelu*3178)}</strong> w pierwszym roku. Tyle jest warte to, po co dzwonisz — a nie to, co już masz.</p></div>
+    </div>` : `<div class="banner ok" style="margin-top:16px"><div class="banner-mark">Cel</div><div><p>Dziesięć podpisów w tym miesiącu zrobione.</p></div></div>`}`;
+
+  document.getElementById("kasa-lista").innerHTML = s.kl.length ? `
+    <div class="tablewrap"><table>
+      <thead><tr><th>Klient</th><th>Co</th><th>Podpis</th><th class="r">Umowa</th><th class="r">Wpłacone</th><th class="r">Zalega</th><th class="r">Abonament</th><th></th></tr></thead>
+      <tbody>${s.kl.map(k=>{
+        const w = wplacone(k), z = Math.max(0,(Number(k.netto)||0)-w), zostalo = Math.max(0,12-miesiecyOd(k.data_podpisu));
+        return `<tr>
+          <td class="lead">${esc(k.nazwa)}</td>
+          <td><span class="chip neutral">${esc(k.produkt||"Strona")}</span></td>
+          <td class="date">${esc(k.data_podpisu||"—")}</td>
+          <td class="val">${zl(k.netto||0)}</td>
+          <td class="val" style="color:var(--ok)">${zl(w)}</td>
+          <td class="val" style="${z>0?"color:var(--warn)":""}">${z>0?zl(z):"—"}</td>
+          <td class="val">${zl(k.abonament||0)}<br><span style="font-size:11px;color:var(--muted)">${zostalo} mies</span></td>
+          <td><button class="mini" data-kli="${k.id}">wpłaty</button></td>
+        </tr>`;}).join("")}</tbody></table></div>`
+    : `<div class="banner warn"><div class="banner-mark">Pusto</div><div><p>Ani jednej podpisanej umowy w systemie. Dopisz cztery opłacone realizacje, które już macie — bez nich prognoza pokazuje zero, choć zero nie jest prawdą.</p></div></div>`;
+
+  document.querySelectorAll("[data-kli]").forEach(b => b.onclick = () => otworzWplaty(b.dataset.kli));
+}
+
+document.getElementById("c-dodaj").onclick = () => {
+  const nazwa = document.getElementById("c-nazwa").value.trim();
+  if (!nazwa) return;
+  D.klienci.push({
+    id: uid(), nazwa,
+    produkt: document.getElementById("c-produkt").value,
+    netto: Number(document.getElementById("c-netto").value) || 0,
+    abonament: Number(document.getElementById("c-abo").value) || 0,
+    data_podpisu: document.getElementById("c-data").value || dzis(),
+    wplaty: []
+  });
+  document.getElementById("c-nazwa").value = "";
+  wyslij(); rysuj();
+};
+
+let aktywnyKlient = null;
+function otworzWplaty(id){
+  aktywnyKlient = id;
+  const k = D.klienci.find(x=>x.id===id); if(!k) return;
+  document.getElementById("w-klient").textContent = k.nazwa;
+  const w = wplacone(k), z = Math.max(0,(Number(k.netto)||0)-w);
+  document.getElementById("w-podsum").textContent = `Umowa ${zl(k.netto||0)} netto · wpłacone ${zl(w)} · ${z>0?"zalega "+zl(z):"rozliczone"}`;
+  document.getElementById("w-lista").innerHTML = (k.wplaty||[]).length
+    ? `<div class="tablewrap"><table style="min-width:0"><tbody>${k.wplaty.map((p,i)=>`<tr>
+        <td class="date">${esc(p.data)}</td><td>${esc(p.opis||"")}</td>
+        <td class="val">${zl(p.kwota||0)}</td>
+        <td><button class="mini danger" data-wpl="${i}">usuń</button></td></tr>`).join("")}</tbody></table></div>`
+    : `<p class="hint">Żadnej wpłaty jeszcze nie ma.</p>`;
+  document.getElementById("w-data").value = dzis();
+  document.getElementById("w-kwota").value = "";
+  document.getElementById("w-opis").value = "";
+  document.getElementById("modal-wplata").classList.add("on");
+  document.querySelectorAll("[data-wpl]").forEach(b => b.onclick = () => {
+    k.wplaty.splice(Number(b.dataset.wpl),1); wyslij(); otworzWplaty(id); rysuj();
+  });
+}
+document.getElementById("w-dodaj").onclick = () => {
+  const k = D.klienci.find(x=>x.id===aktywnyKlient); if(!k) return;
+  const kwota = Number(document.getElementById("w-kwota").value);
+  if (!kwota) return;
+  (k.wplaty = k.wplaty || []).push({ data: document.getElementById("w-data").value || dzis(), kwota, opis: document.getElementById("w-opis").value.trim() });
+  wyslij(); otworzWplaty(aktywnyKlient); rysuj();
+};
+document.getElementById("w-usun").onclick = () => {
+  D.klienci = D.klienci.filter(x=>x.id!==aktywnyKlient);
+  document.getElementById("modal-wplata").classList.remove("on");
+  wyslij(); rysuj();
+};
+document.getElementById("w-zamknij").onclick = () => document.getElementById("modal-wplata").classList.remove("on");
+
+/* ---------------- KONWERSJA + MATERIAŁY ---------------- */
+const dzienMiesiaca = () => new Date().getDate();
+function pozycjaNaDzis(lista){
+  if (!lista.length) return null;
+  const d = dzienMiesiaca();
+  return lista.find(x => x.dzien === d) || lista[(d-1) % lista.length];
+}
+
+function kartaInsightu(it, duza){
+  if (!it) return "";
+  return `<div class="card">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px">
+      <div class="eyebrow">Dzień ${it.dzien} · ${esc(it.technika)}</div>
+      ${duza ? `<span class="chip warn">na dziś</span>` : ""}
+    </div>
+    <h3 style="font-size:${duza?"19px":"15px"}">${esc(it.tytul)}</h3>
+    <p style="margin:8px 0 0;font-size:14.5px">${esc(it.tekst)}</p>
+    <p style="margin:10px 0 0;font-size:13.5px;color:var(--muted)"><strong>Dlaczego działa:</strong> ${esc(it.dlaczego)}</p>
+    ${it.skrypt ? `<div class="script"><button class="copy" type="button">Kopiuj</button><pre>${esc(it.skrypt)}</pre></div>` : ""}
+  </div>`;
+}
+
+function kartaMaterialu(m, duza){
+  if (!m) return "";
+  return `<div class="card">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px">
+      <div class="eyebrow">Dzień ${m.dzien} · ${esc(m.typ)} · ${esc(m.zrodlo)}</div>
+      ${duza ? `<span class="chip warn">na dziś</span>` : `<span class="chip neutral">${esc(m.czas)}</span>`}
+    </div>
+    <h3 style="font-size:${duza?"18px":"15px"}"><a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.tytul)}</a></h3>
+    <p style="margin:6px 0 0;font-size:14px;color:var(--muted)">${esc(m.po_co)}</p>
+    ${duza ? `<div class="row" style="margin-top:12px"><a class="btn" href="${esc(m.url)}" target="_blank" rel="noopener" style="text-decoration:none">Otwórz — ${esc(m.czas)}</a></div>` : ""}
+  </div>`;
+}
+
+function rysujTresc(){
+  const ins = pozycjaNaDzis(tresc.insighty||[]);
+  const mat = pozycjaNaDzis(tresc.materialy||[]);
+
+  document.getElementById("konw-dzis").innerHTML = ins ? kartaInsightu(ins, true)
+    : `<div class="banner warn"><div class="banner-mark">Brak</div><div><p>Zapas insightów się skończył. Powiedz Claude'owi: „dopisz kolejne 30 insightów”.</p></div></div>`;
+  document.getElementById("konw-lista").innerHTML = `<div class="cards">${(tresc.insighty||[]).map(i=>kartaInsightu(i,false)).join("")}</div>`;
+
+  document.getElementById("mat-dzis").innerHTML = mat ? kartaMaterialu(mat, true) : "";
+  document.getElementById("mat-lista").innerHTML = `<div class="cards two">${(tresc.materialy||[]).map(m=>kartaMaterialu(m,false)).join("")}</div>`;
+
+  if (ins) {
+    document.getElementById("dzis-insight-tytul").textContent = ins.tytul;
+    document.getElementById("dzis-insight-tekst").textContent = ins.tekst.slice(0,190) + "…";
+  }
+  if (mat) {
+    document.getElementById("dzis-mat-tytul").textContent = mat.tytul;
+    document.getElementById("dzis-mat-po-co").textContent = mat.po_co;
+  }
+  podepnijKopiuj();
+}
+
+/* ---------------- SKRYPTY ---------------- */
+const SKRYPTY = [
+  ["Prośba o decyzję","Stały moment każdej rozmowy prezentacyjnej. Potem milczysz.",
+   "To co — ruszamy? 1990 netto, gotowe w 14 dni roboczych. Wysyłam Zamówienie, podpis odsyła Pan skanem, 995 na start i ruszamy [data]."],
+  ["„Za drogo”","Nie zbijaj rabatem, zanim nie zapytasz, ile wart jest ich jeden klient.",
+   "Rozumiem, to konkretna kwota i nie chcę Pana namawiać w ciemno. Ile jest wart dla Pana jeden nowy klient? … To strona zwraca się po [X] zleceniach. Cały pierwszy rok to 3178 netto — mniej niż [koszt, który znają]. Jeśli to się spina — ruszamy?"],
+  ["„Muszę się zastanowić”","To nie obiekcja, tylko brak przedmiotu decyzji. Nie przyjmuj tego.",
+   "Jasne. Tylko żebym wiedział, nad czym — nad ceną, nad terminem, czy nad tym, czy w ogóle strona jest Panu potrzebna?"],
+  ["„Proszę wysłać maila”","Nie odmawiaj, ale nie oddawaj kontroli — wysyłka zawsze z umówionym telefonem.",
+   "Wyślę. Żeby to nie był kolejny mail bez życia — wyślę Zamówienie: 1990 netto, gotowe w 14 dni roboczych. I zadzwonię w [dzień] o [godzina], żeby usłyszeć tak albo nie. Pasuje?"],
+  ["„Mam już stronę i jestem zadowolony”","Atakujesz brak pomiaru, nie stronę.",
+   "Rozumiem, nie przekonuję Pana, że jest zła. Pytam o co innego: ile telefonów miesięcznie przychodzi z tej strony? Ma Pan to gdzieś policzone?\n\nTo znaczy, że nie wiadomo, ile aut przeszło obok. W czwartek o [godz.] wchodzę z Panem na stronę przez telefon, 15 minut, pokazuję gdzie klient odpada. Czwartek 10:00 czy 14:00?"],
+  ["„Nie mam czasu / mam dość pracy”","Nie przepychaj. Zadowolony z ilości pracy nie kupi strony, żeby mieć jej więcej.",
+   "Rozumiem, w takim razie nie zabieram czasu. Odezwę się za trzy miesiące — chyba że wolałby Pan, żebym nie dzwonił?"],
+  ["„A co jak mi się nie spodoba”","Zdejmij ryzyko, nie cenę.",
+   "14 dni roboczych od podpisu. Pierwszą wersję pokazuję już po tygodniu i wtedy Pan mówi, co poprawić — jedna runda poprawek jest w cenie. Płaci Pan 995 netto na start, drugie 995 dopiero jak jest gotowe i się Panu podoba."],
+  ["„Muszę pogadać ze wspólnikiem”","Ostatnie pytanie jest najważniejsze — jak on sam nie jest przekonany, wspólnik to parawan.",
+   "Oczywiście. Kiedy Pan z nim rozmawia? … To umówmy się na [dzień po tej rozmowie], zadzwonię i usłyszę decyzję. I proszę powiedzieć — jak Pan sam to widzi?"],
+  ["Kod źródłowy i własność","Nigdy nie mów „dostaje Pan kod źródłowy” — umowa daje licencję, nie własność.",
+   "Strona i domena są Pana. Jeśli kiedykolwiek zechce Pan przejść gdzie indziej, przekazujemy pliki strony i domenę w 14 dni. Nie trzymamy Pana u siebie na siłę."]
+];
+document.getElementById("skrypty-lista").innerHTML = SKRYPTY.map(([t,o,s])=>`
+  <div class="obj"><h3>${esc(t)}</h3><div class="said">${esc(o)}</div>
+  <div class="script"><button class="copy" type="button">Kopiuj</button><pre>${esc(s)}</pre></div></div>`).join("");
+
+function podepnijKopiuj(){
+  document.querySelectorAll(".copy").forEach(btn => btn.onclick = () => {
+    const pre = btn.parentElement.querySelector("pre"); if(!pre) return;
+    navigator.clipboard?.writeText(pre.textContent).then(()=>{
+      btn.textContent = "Skopiowane"; btn.classList.add("done");
+      setTimeout(()=>{ btn.textContent="Kopiuj"; btn.classList.remove("done"); },1500);
+    },()=>{});
+  });
+}
+
+/* ---------------- DZIŚ ---------------- */
+function rysujDzis(przysz, naDzis){
+  const dni = ["niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"];
+  const mies = ["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
+  const t = new Date();
+  document.getElementById("dzis-data").textContent = `${dni[t.getDay()]} ${t.getDate()} ${mies[t.getMonth()]} ${t.getFullYear()}`;
+
+  const s = liczKase();
+  const teraz = new Date();
+  const poTerminie = (D.kalendarz||[]).filter(w => !w.zrobione && dtWpisu(w) < teraz);
+  const nastepny = przysz.find(w => !w.zrobione && dtWpisu(w) >= teraz);
+
+  let nag, opis;
+  if (poTerminie.length) {
+    nag = `${poTerminie.length} ${poTerminie.length===1?"wpis":"wpisy"} po terminie — zacznij od ${poTerminie[0].klient}.`;
+    opis = "Lead, którego termin minął, a nikt nie zadzwonił, jest martwy tak samo jak lead bez daty. Odhacz albo umów na nowo, zanim weźmiesz się za cokolwiek innego.";
+  } else if (naDzis.length) {
+    const w = naDzis[0];
+    nag = `${w.godzina} — ${w.klient}. ${w.co}`;
+    opis = naDzis.length > 1 ? `Dziś jeszcze ${naDzis.length-1} ${naDzis.length===2?"telefon":"telefony"}. Każdy z nich ma się skończyć prośbą o decyzję — inaczej się nie liczy.`
+                             : "Rozmowa bez momentu prośby o decyzję nie liczy się jako odbyta.";
+  } else if (nastepny) {
+    nag = `Dziś nic nie umówione. Najbliższe: ${nastepny.klient}, ${nastepny.data} o ${nastepny.godzina}.`;
+    opis = "Pusty kalendarz na dziś to dzień bez szansy na podpis. Umów co najmniej jeden telefon na jutro, zanim zamkniesz panel.";
+  } else {
+    nag = "Kalendarz pusty. Zero umówionych telefonów.";
+    opis = "Nie ma czegoś takiego jak przerwa w pipelinie — jest tylko miesiąc bez podpisów, który zaczyna się dziś.";
+  }
+  document.getElementById("dzis-naglowek").textContent = nag;
+  document.getElementById("dzis-opis").textContent = opis;
+
+  const doCelu = Math.max(0, 10 - s.podpisyWTymMies);
+  const koniecMies = new Date(t.getFullYear(), t.getMonth()+1, 0).getDate();
+  document.getElementById("dzis-stats").innerHTML = `
+    <div class="stat ${s.podpisyWTymMies===0?"crit":"ok"}">
+      <div class="stat-label">Podpisy w tym miesiącu</div><div class="stat-value">${s.podpisyWTymMies} / 10</div>
+      <div class="meter"><i style="width:${Math.min(100,s.podpisyWTymMies*10)}%"></i></div>
+      <div class="stat-note">${koniecMies - t.getDate()} dni do końca miesiąca</div></div>
+    <div class="stat"><div class="stat-label">Umówione telefony</div><div class="stat-value">${przysz.filter(w=>!w.zrobione).length}</div>
+      <div class="stat-note">${naDzis.length} na dziś</div></div>
+    <div class="stat ok"><div class="stat-label">Wpłacone w tym miesiącu</div><div class="stat-value">${zl(s.wTymMies)}</div>
+      <div class="stat-note">netto, realnie na koncie</div></div>
+    <div class="stat ${doCelu>0?"warn":"ok"}"><div class="stat-label">Do celu brakuje</div><div class="stat-value">${zl(doCelu*3178)}</div>
+      <div class="stat-note">${doCelu} ${doCelu===1?"podpis":"podpisów"} × 3178 zł netto</div></div>`;
+}
+
+/* ---------------- render ---------------- */
+function rysuj(){
+  const { naDzis, przysz } = rysujKalendarz();
+  rysujKase();
+  rysujDzis(przysz, naDzis);
+  stanPowiadomien();
+}
+
+/* ---------------- ustawienia ---------------- */
+const modalCfg = document.getElementById("modal-cfg");
+document.getElementById("syncbtn").onclick = () => {
+  document.getElementById("cfg-owner").value = cfg.owner || "";
+  document.getElementById("cfg-repo").value = cfg.repo || "";
+  document.getElementById("cfg-token").value = cfg.token || "";
+  document.getElementById("cfg-stan").textContent = cfg.token ? "Token wpisany na tym urządzeniu." : "Bez tokenu dane zostają tylko w tej przeglądarce — nie zobaczysz ich na telefonie ani w przypominaczu.";
+  modalCfg.classList.add("on");
+};
+document.getElementById("cfg-zamknij").onclick = () => modalCfg.classList.remove("on");
+document.getElementById("cfg-zapisz").onclick = async () => {
+  cfg.owner = document.getElementById("cfg-owner").value.trim();
+  cfg.repo = document.getElementById("cfg-repo").value.trim();
+  cfg.token = document.getElementById("cfg-token").value.trim();
+  cfg.path = cfg.path || "dane.json";
+  localStorage.setItem(LS_CFG, JSON.stringify(cfg));
+  modalCfg.classList.remove("on");
+  await pobierz();
+};
+document.getElementById("cfg-wyloguj").onclick = () => {
+  cfg.token = ""; localStorage.setItem(LS_CFG, JSON.stringify(cfg));
+  document.getElementById("cfg-token").value = "";
+  setSync("local","tylko ten sprzęt");
+  document.getElementById("cfg-stan").textContent = "Token usunięty z tej przeglądarki.";
+};
+
+/* ---------------- start ---------------- */
+(async function start(){
+  trasa();
+  document.getElementById("k-data").value = dzis();
+  document.getElementById("c-data").value = dzis();
+  try {
+    const r = await fetch("tresc.json?v=" + Date.now());
+    if (r.ok) tresc = await r.json();
+  } catch(e) {}
+  rysujTresc();
+  rysuj();
+  await pobierz();
+  rysujTresc();
+  setInterval(sprawdzPowiadomienia, 60000);
+  sprawdzPowiadomienia();
+  setInterval(rysuj, 300000);
+})();
+</script>
+</body>
+</html>

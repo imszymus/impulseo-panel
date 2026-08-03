@@ -1,0 +1,278 @@
+{
+  "wersja": 1,
+  "opis": "Zapas na 30 dni. Panel pokazuje pozycję wg dnia miesiąca. Gdy się skończy, powiedz Claude'owi: dopisz kolejne 30.",
+  "insighty": [
+    {
+      "dzien": 1,
+      "tytul": "Cisza po prośbie o decyzję",
+      "technika": "Milczenie jako narzędzie",
+      "tekst": "Pytasz „to co, ruszamy?” i przestajesz mówić. Nie tłumaczysz, nie dodajesz „ale oczywiście bez zobowiązań”, nie wypełniasz pauzy. Cisza po pytaniu zamykającym jest niewygodna dla obu stron, ale to klient ma ją wypełnić — bo to on ma podjąć decyzję. Kiedy przerywasz ciszę pierwszy, sam odbierasz sobie odpowiedź i zwykle robisz to ustępstwem.",
+      "dlaczego": "Człowiek pod presją ciszy mówi to, co naprawdę myśli, bo mózg dąży do domknięcia luki. Jeśli mu ją zamkniesz swoim gadaniem, dostaniesz uprzejmość zamiast decyzji.",
+      "skrypt": "To co — ruszamy? 1990 netto, gotowe w 14 dni roboczych.\n\n[i teraz nic nie mówisz, choćby minęło dziesięć sekund]"
+    },
+    {
+      "dzien": 2,
+      "tytul": "Pierwsza liczba w rozmowie ustawia wszystkie następne",
+      "technika": "Zakotwiczenie",
+      "tekst": "Jeżeli klient pierwszy powie „myślałem o jakichś pięciuset złotych”, cała reszta rozmowy toczy się wokół tej piątki i Twoje 1990 brzmi jak cztery razy za drogo. Jeżeli Ty pierwszy powiesz, ile jest wart jego jeden klient — na przykład 800 zł za nagrobek — to Twoje 1990 brzmi jak dwa i pół zlecenia.",
+      "dlaczego": "Efekt zakotwiczenia opisany przez Kahnemana i Tversky'ego: pierwsza usłyszana liczba staje się punktem odniesienia dla wszystkich kolejnych, nawet gdy jest zupełnie przypadkowa.",
+      "skrypt": "Zanim powiem, ile to kosztuje — ile jest dla Pana wart jeden nowy klient? Ile średnio zostawia?"
+    },
+    {
+      "dzien": 3,
+      "tytul": "Pytania na „jak”, nie na „czy”",
+      "technika": "Kalibrowane pytania (Chris Voss)",
+      "tekst": "„Czy jest Pan zainteresowany?” daje klientowi darmowe wyjście jednym słowem. „Jak by to musiało wyglądać, żeby miało dla Pana sens?” zmusza go do myślenia o wersji, w której kupuje. Wymień wszystkie swoje pytania zamknięte na otwarte — poza jednym, tym o decyzję na końcu.",
+      "dlaczego": "Pytanie otwarte przenosi ciężar pracy myślowej na klienta i ujawnia prawdziwą blokadę zamiast grzecznego „nie, dziękuję”.",
+      "skrypt": "Jak musiałaby wyglądać ta strona, żeby powiedział Pan: dobra, to ma sens?"
+    },
+    {
+      "dzien": 4,
+      "tytul": "Nazwij to, co klient czuje, zanim on to powie",
+      "technika": "Etykietowanie (labeling)",
+      "tekst": "Kiedy słyszysz wahanie, nie udawaj że go nie ma. Powiedz je na głos: „Wygląda na to, że już Pana ktoś kiedyś na stronie sparzył”. Klient albo potwierdzi i wtedy dostajesz prawdziwą obiekcję do pracy, albo zaprzeczy — i sam zacznie Cię przekonywać, że jest inaczej.",
+      "dlaczego": "Nazwana emocja traci moc. Voss używał tego przy negocjacjach z porywaczami; działa tak samo przy „muszę się zastanowić”.",
+      "skrypt": "Mam wrażenie, że coś Pana tu uwiera i nie chce Pan tego powiedzieć wprost. Wolę usłyszeć od razu, niż dzwonić trzy razy bez sensu."
+    },
+    {
+      "dzien": 5,
+      "tytul": "Pytania, na które „nie” jest dla Ciebie dobrą odpowiedzią",
+      "technika": "Odwrócenie „tak”",
+      "tekst": "„Czy to zły moment, żeby o tym rozmawiać?” — klient mówi „nie” i czuje, że zachował kontrolę, a rozmowa toczy się dalej. Ludzie bronią się przed łańcuchem „tak”, bo wyczuwają w nim technikę sprzedażową. „Nie” ich rozluźnia.",
+      "dlaczego": "Voss twierdzi, że „nie” daje poczucie bezpieczeństwa, a „tak” uruchamia czujność. Dopiero po kilku bezpiecznych „nie” klient szczerze odpowie na pytanie o decyzję.",
+      "skrypt": "Czy byłby to dla Pana problem, gdybyśmy poświęcili na to teraz kwadrans?"
+    },
+    {
+      "dzien": 6,
+      "tytul": "Małe „tak” prowadzi do dużego",
+      "technika": "Zaangażowanie i konsekwencja (Cialdini)",
+      "tekst": "Zanim poprosisz o podpis, poproś o trzy drobiazgi: żeby wszedł na swoją stronę na telefonie w trakcie rozmowy, żeby podał adres mailowy, żeby powiedział, który dzień tygodnia mu pasuje. Każde z nich jest darmowe, a razem budują u niego obraz siebie jako kogoś, kto już w tym uczestniczy.",
+      "dlaczego": "Cialdini: ludzie dążą do spójności z własnymi wcześniejszymi działaniami. Ktoś, kto wykonał pięć drobnych kroków, wycofuje się trudniej niż ktoś, kto tylko słuchał.",
+      "skrypt": "Ma Pan telefon pod ręką? Proszę wejść na swoją stronę i powiedzieć mi, ile sekund się ładuje. … No właśnie. Klient czeka tyle samo."
+    },
+    {
+      "dzien": 7,
+      "tytul": "Dowód społeczny musi być z jego podwórka",
+      "technika": "Dowód społeczny (Cialdini)",
+      "tekst": "„Robimy strony dla firm w całej Polsce” nie działa. „Robiliśmy stronę dla warsztatu dwie ulice dalej i teraz mają telefony z Google” działa, bo on tę ulicę zna. Masz cztery opłacone realizacje — używaj ich z nazwy i z branży, jeżeli klienci pozwolili. Umowa daje Ci prawo do portfolio, paragraf 7 ustęp 4.",
+      "dlaczego": "Dowód społeczny działa najsilniej, gdy pochodzi od kogoś podobnego do odbiorcy. Podobieństwo branży i okolicy bije wielkość liczb.",
+      "skrypt": "Robiliśmy to samo dla [firma z tej samej branży]. Może Pan zobaczyć, jak to wyszło — wyślę link, ale wolałbym pokazać na rozmowie i od razu powiedzieć, co byśmy zrobili u Pana."
+    },
+    {
+      "dzien": 8,
+      "tytul": "Strata boli dwa razy mocniej, niż cieszy zysk",
+      "technika": "Awersja do straty",
+      "tekst": "„Zyska Pan nowych klientów” jest słabsze niż „ci ludzie, którzy Pana szukają w Google, dziś trafiają do konkurencji”. To ta sama informacja, tylko druga wersja opisuje coś, co on już traci — a straty ludzie chcą zatrzymać natychmiast, podczas gdy zyski można odłożyć na później.",
+      "dlaczego": "Badania Kahnemana i Tversky'ego: ta sama kwota jako strata waży dla nas mniej więcej dwa razy więcej niż jako zysk.",
+      "skrypt": "Nie chodzi o to, żeby Pan zyskał. Chodzi o to, że przy [X] opiniach ludzie Pana już szukają — i teraz część z nich ląduje u kogoś innego, bo nie ma gdzie kliknąć."
+    },
+    {
+      "dzien": 9,
+      "tytul": "Dawaj wybór między dwoma „tak”, nigdy między „tak” a „nie”",
+      "technika": "Alternatywa pozorna",
+      "tekst": "„Kiedy moglibyśmy się umówić?” otwiera pole do „ja się odezwę”. „Czwartek dziesiąta czy czwartek czternasta?” zawęża do dwóch terminów, z których oba są dla Ciebie dobre. To nie jest manipulacja, tylko usunięcie zbędnej pracy z głowy klienta.",
+      "dlaczego": "Im więcej opcji, tym większa szansa odroczenia decyzji. Dwie konkretne opcje domykają szybciej niż pytanie otwarte.",
+      "skrypt": "Czwartek dziesiąta czy czwartek czternasta?"
+    },
+    {
+      "dzien": 10,
+      "tytul": "Pokaż mu jego własne zdjęcia na makiecie",
+      "technika": "Efekt posiadania",
+      "tekst": "Makieta z tekstem „Lorem ipsum” i szarymi prostokątami to Twoja praca. Makieta z jego logo, jego zdjęciami z Facebooka i jego numerem telefonu to już jego strona — i wtedy rezygnacja z niej zaczyna być odczuwana jako strata. To jest najmocniejszy argument, jaki masz, i dlatego nie wolno go wysyłać mailem bez Ciebie.",
+      "dlaczego": "Efekt posiadania: przypisujemy wyższą wartość rzeczom, które odczuwamy jako swoje, nawet gdy „posiadanie” trwa dwie minuty na ekranie.",
+      "skrypt": "To jest Pana strona. Pana zdjęcia, Pana opinie z Google, Pana numer u góry. Zostało ją tylko włączyć — ruszamy?"
+    },
+    {
+      "dzien": 11,
+      "tytul": "Policz koszt bezczynności w złotówkach",
+      "technika": "Kwantyfikacja bólu",
+      "tekst": "Dopóki nic nie liczysz, 1990 zł to jedyna liczba w rozmowie i jest po stronie kosztów. Jeżeli ustalisz z klientem, że jeden nowy klient jest wart 600 zł i że traci co najmniej dwóch miesięcznie, to nagle po drugiej stronie stoi 14 400 zł rocznie, a Twoja cena to 14 procent tego.",
+      "dlaczego": "Gong przeanalizował ponad milion rozmów: obiekcja cenowa jest w większości przypadków objawem niepokazanej wartości, nie realnym brakiem pieniędzy.",
+      "skrypt": "Ile telefonów miesięcznie dostaje Pan dziś z internetu? … A ile jest wart jeden taki klient? … To policzmy: [X] razy [Y] to [Z] złotych rocznie, których dziś nie ma. Strona to jednorazowo 1990 netto."
+    },
+    {
+      "dzien": 12,
+      "tytul": "Rozbij cenę, ale nigdy jej nie obniżaj",
+      "technika": "Przeramowanie ceny",
+      "tekst": "1990 zł plus 99 zł miesięcznie to 3178 zł w pierwszym roku, czyli około 265 zł miesięcznie, czyli mniej niż 9 zł dziennie. Nie zmieniasz ceny ani o złotówkę — zmieniasz jednostkę, w której klient ją sobie wyobraża. Porównaj do czegoś, co on zna: jedna wymiana opon, dwa tankowania, jedna reklama w lokalnej gazecie.",
+      "dlaczego": "Ta sama kwota w innej jednostce czasu jest inaczej odbierana, bo mózg porównuje ją do innych wydatków w tej samej skali.",
+      "skrypt": "Cały pierwszy rok to 3178 netto. To jest 265 złotych miesięcznie — mniej, niż kosztuje Pana jedna wymiana kompletu opon."
+    },
+    {
+      "dzien": 13,
+      "tytul": "Nie negocjuj sam ze sobą",
+      "technika": "Dyscyplina cenowa",
+      "tekst": "Najczęstszy błąd popełniany w ciszy po podaniu ceny: sprzedawca sam dodaje „ale możemy coś ustalić” albo „da się to trochę zejść”. Klient jeszcze nic nie powiedział, a Ty już zbiłeś sobie cenę i pokazałeś, że pierwsza liczba nie była prawdziwa. Od tego momentu żadna kolejna też nie będzie.",
+      "dlaczego": "Cena, która spada bez nacisku, sygnalizuje, że była zawyżona — i podważa wiarygodność całej oferty, nie tylko kwoty.",
+      "skrypt": "1990 netto, czyli 2447,70 z VAT-em.\n\n[koniec zdania — nie dodajesz nic więcej]"
+    },
+    {
+      "dzien": 14,
+      "tytul": "Prośba o decyzję to jedno zdanie",
+      "technika": "Higiena zamknięcia",
+      "tekst": "Im dłuższe zamknięcie, tym więcej w nim haczyków, o które klient może się zaczepić. Jedno zdanie: co, za ile, w jakim czasie, jaki jest następny ruch. Każde dodatkowe zdanie osłabia poprzednie i brzmi jak tłumaczenie się z ceny.",
+      "dlaczego": "Rozbudowane uzasadnianie po podaniu ceny czyta się jak brak wiary we własną ofertę.",
+      "skrypt": "To co — ruszamy? Wysyłam Zamówienie, podpis odsyła Pan skanem, 995 na start i zaczynamy [data]."
+    },
+    {
+      "dzien": 15,
+      "tytul": "„Muszę się zastanowić” to nie obiekcja",
+      "technika": "Diagnoza zamiast walki",
+      "tekst": "To jest komunikat, że klient nie ma przedmiotu decyzji — nie zna dokładnie ceny, terminu albo zakresu, więc nie ma nad czym myśleć i mówi jedyną bezpieczną rzecz. Nie przekonuj go. Zapytaj, nad czym konkretnie, i policz, ile z trójki cena–termin–zakres faktycznie padło w tej rozmowie.",
+      "dlaczego": "Tydzień 27 lipca: 70 rozmów, 39 wysłanych dem, zero podpisów. Wspólny mianownik to nie cena, tylko brak trzech konkretów w momencie decyzji.",
+      "skrypt": "Jasne. Tylko żebym wiedział, nad czym — nad ceną, nad terminem, czy nad tym, czy w ogóle strona jest Panu potrzebna?"
+    },
+    {
+      "dzien": 16,
+      "tytul": "Daj coś konkretnego, zanim poprosisz",
+      "technika": "Wzajemność (Cialdini)",
+      "tekst": "Nie chodzi o gratisy, tylko o realną robotę wykonaną przed prośbą o pieniądze: sprawdzona wizytówka Google, wytknięte trzy błędy na obecnej stronie, policzone ile sekund się ładuje. Człowiek, który dostał konkret za darmo, ma odruch odwzajemnienia — a minimalna forma odwzajemnienia to wysłuchanie prośby o decyzję do końca.",
+      "dlaczego": "Reguła wzajemności działa nawet przy drobnych przysługach i nawet wtedy, gdy odbiorca o nic nie prosił.",
+      "skrypt": "Zanim cokolwiek zaproponuję — sprawdziłem Pana wizytówkę w Google. Ma Pan tam błąd w godzinach otwarcia, przez to ludzie w sobotę myślą, że jest zamknięte. To można poprawić w pięć minut, niezależnie od tego, czy będziemy współpracować."
+    },
+    {
+      "dzien": 17,
+      "tytul": "Powiedz sam, czego nie gwarantujesz",
+      "technika": "Autorytet przez przyznanie się do granic",
+      "tekst": "Powiedziane pierwsze „nie obiecuję Panu pierwszego miejsca w Google, bo nikt uczciwy tego nie obieca” buduje wiarygodność. Wyduszone później, po pytaniu klienta, brzmi jak wykręt. Masz to zresztą w umowie, paragraf 8 ustęp 2 — lepiej, żeby usłyszał to od Ciebie niż przeczytał drobnym drukiem.",
+      "dlaczego": "Przyznanie się do ograniczenia podnosi wiarygodność wszystkiego, co mówisz potem — to jeden z lepiej potwierdzonych efektów w psychologii perswazji.",
+      "skrypt": "Od razu mówię, czego nie obiecuję: nie obiecuję pierwszego miejsca w Google. Kto to obiecuje, ten kłamie. Obiecuję stronę, która nie odstrasza ludzi, których Pan już ma."
+    },
+    {
+      "dzien": 18,
+      "tytul": "Ostatnie trzydzieści sekund waży najwięcej",
+      "technika": "Domknięcie następnego kroku",
+      "tekst": "Rozmowa bez konkretnej daty i godziny następnego kroku jest rozmową zakończoną niczym, choćby przebiegła świetnie. „Odezwę się w przyszłym tygodniu” to to samo co „koniec”. Data, godzina, i kto do kogo dzwoni — trzy rzeczy, bez których nie odkładasz słuchawki.",
+      "dlaczego": "Wyraźne ustalenie następnego kroku to jedno z zachowań najsilniej skorelowanych z domknięciem w analizach rozmów sprzedażowych.",
+      "skrypt": "To umawiamy się tak: dzwonię do Pana w czwartek o czternastej, pokazuję makietę i wtedy Pan mówi tak albo nie. Zapisuję sobie czwartek czternasta — pasuje?"
+    },
+    {
+      "dzien": 19,
+      "tytul": "Zadaj więcej pytań, niż Ci się wydaje potrzebne",
+      "technika": "Głębokość diagnozy",
+      "tekst": "Analiza rozmów sprzedażowych pokazuje, że najlepsze wyniki mają rozmowy z jedenastoma do czternastu pytaniami rozpoznawczymi, skupione na trzech, czterech problemach klienta zamiast na dziesięciu powierzchownych. Przy Twoich rozmowach to znaczy: mniej opowiadania o stronie, więcej pytań o to, skąd dziś przychodzą mu klienci.",
+      "dlaczego": "Gong Labs, na podstawie analizy ponad miliona rozmów — liczba pytań rozpoznawczych ma optimum, a jest nim przedział 11–14.",
+      "skrypt": "Skąd dziś przychodzą do Pana klienci? … A gdyby jutro to źródło wyschło? … Ile zleceń miesięcznie by Pan chciał? … Co Pana zdaniem stoi na przeszkodzie?"
+    },
+    {
+      "dzien": 20,
+      "tytul": "Podsumuj jego słowami, zanim podasz cenę",
+      "technika": "Podsumowanie (Voss)",
+      "tekst": "Zanim padnie liczba, powtórz mu jego własne zdania: „Czyli ma Pan sześćdziesiąt opinii, klienci Pana znajdują, ale strona jest z 2015 i nikt przez nią nie dzwoni — dobrze rozumiem?”. Kiedy usłyszysz „dokładnie tak”, cena pada na przygotowany grunt, a nie w próżnię.",
+      "dlaczego": "Voss nazywa reakcję „dokładnie tak” najważniejszym momentem negocjacji — oznacza, że druga strona czuje się zrozumiana, a nie obrabiana.",
+      "skrypt": "Czyli podsumowując Pana słowami: klientów Pan ma, opinie Pan ma, tylko strona jest sprzed dziesięciu lat i nikt przez nią nie dzwoni. Dobrze rozumiem?"
+    },
+    {
+      "dzien": 21,
+      "tytul": "Nic nie wychodzi bez umówionego telefonu",
+      "technika": "Kontrola nad następnym krokiem",
+      "tekst": "Wysłanie makiety, wyceny albo maila bez ustalonego terminu rozmowy oddaje całą wartość i nie zostawia Ci żadnego powodu, żeby zadzwonić. Potem dzwonisz „czy Pan widział” i to jest rozmowa z pozycji proszącego. Wysyłka zawsze w pakiecie z konkretnym dniem i godziną.",
+      "dlaczego": "Trzydzieści dziewięć wysłanych dem i zero podpisów w jednym tygodniu to nie przypadek — to skutek systematycznego oddawania inicjatywy.",
+      "skrypt": "Wyślę Panu to dzisiaj do osiemnastej. I zadzwonię jutro o jedenastej, żeby usłyszeć, co Pan o tym myśli — tak czy nie, obie odpowiedzi są w porządku. Jutro jedenasta pasuje?"
+    },
+    {
+      "dzien": 22,
+      "tytul": "Kto pierwszy mówi o cenie, ten ją kontroluje",
+      "technika": "Moment podania ceny",
+      "tekst": "Podana za wcześnie — zanim klient zrozumiał, co dostaje — jest gołą liczbą i wywołuje odruch obrony. Podana za późno albo wyduszona po trzecim pytaniu wygląda na ukrywaną. Właściwy moment to zaraz po tym, jak klient potwierdzi Twoje podsumowanie jego problemu.",
+      "dlaczego": "Cena bez kontekstu wartości jest zawsze za wysoka, bo nie ma z czym jej porównać.",
+      "skrypt": "[po potwierdzeniu podsumowania] To ja powiem, co proponuję i ile to kosztuje, żeby nie było niedomówień. Strona: 1990 netto, czyli 2447,70 z VAT-em. Do tego 99 netto miesięcznie za utrzymanie."
+    },
+    {
+      "dzien": 23,
+      "tytul": "Wygodne wyjście w połowie rozmowy to pułapka",
+      "technika": "Rozpoznanie własnego wzorca",
+      "tekst": "To jest Twój osobisty wzorzec, nie ogólna zasada: kiedy w rozmowie robi się niezręcznie, wybierasz łatwiejszą chwilę teraz kosztem decyzji później. „To wyślę Panu maila” zamiast prośby o podpis. „Wszystko do dogadania” zamiast ceny. Ten moment dyskomfortu jest dokładnie tym miejscem, w którym trzeba zostać.",
+      "dlaczego": "Zdiagnozowane 1 sierpnia: nie brak rozmów jest wąskim gardłem, tylko systematyczne omijanie momentu decyzji.",
+      "skrypt": "[gdy łapiesz się na ucieczce] Panie [nazwisko], powiem wprost, bo nie chcę owijać: dzwonię, żeby usłyszeć tak albo nie. Obie odpowiedzi są dla mnie dobre, najgorsze jest zawieszenie."
+    },
+    {
+      "dzien": 24,
+      "tytul": "Wygrywasz albo przegrywasz przed podaniem ceny",
+      "technika": "Pre-suasion",
+      "tekst": "To, na czym skupiona jest uwaga klienta w chwili poprzedzającej cenę, decyduje o tym, jak ją odbierze. Jeżeli minutę wcześniej rozmawialiście o tym, ile traci, cena brzmi jak rozwiązanie. Jeżeli rozmawialiście o tym, jaki jest kryzys w branży, cena brzmi jak kolejny kłopot.",
+      "dlaczego": "Cialdini w „Pre-swazji” pokazuje, że moment poprzedzający komunikat wpływa na jego odbiór mocniej niż sama treść komunikatu.",
+      "skrypt": "[bezpośrednio przed ceną] Czyli zgadzamy się, że te dwa–trzy telefony miesięcznie, które dziś uciekają, to jakieś [X] złotych rocznie. Teraz cena:"
+    },
+    {
+      "dzien": 25,
+      "tytul": "Zdejmij ryzyko, zamiast zbijać cenę",
+      "technika": "Redukcja ryzyka",
+      "tekst": "Klient, który się waha, najczęściej nie boi się kwoty — boi się, że zapłaci i dostanie coś, czego nie chciał. Rabat tego nie leczy, bo tańszy kot w worku dalej jest kotem w worku. Leczy to podział płatności i pokazanie pierwszej wersji po tygodniu: płaci połowę, widzi efekt, dopłaca resztę.",
+      "dlaczego": "Postrzegane ryzyko jest osobnym hamulcem niż cena; obniżka ceny na nie nie działa, a rozłożenie zobowiązania w czasie owszem.",
+      "skrypt": "Płaci Pan 995 netto na start. Pierwszą wersję pokazuję po tygodniu i wtedy Pan mówi, co poprawić. Drugie 995 dopiero jak jest gotowe i się Panu podoba."
+    },
+    {
+      "dzien": 26,
+      "tytul": "Termin ma być prawdziwy",
+      "technika": "Niedobór — używany uczciwie",
+      "tekst": "Niedobór działa, ale wymyślony niedobór w małym mieście wraca do Ciebie w trzecim miesiącu, kiedy klient dowiaduje się od znajomego, że żadnej promocji nie było. Masz prawdziwe ograniczenia i one wystarczą: kolejka realizacji, czternaście dni roboczych od wpłaty, termin przed sezonem u niego w branży.",
+      "dlaczego": "Niedobór jest jedną z najsilniejszych reguł wpływu, ale opiera się na wiarygodności. Raz przyłapany na fałszywym deadlinie tracisz ją na całym rynku lokalnym, z którego żyjesz.",
+      "skrypt": "Czternaście dni roboczych liczy się od wpłaty, nie od rozmowy. Jak podpisujemy w tym tygodniu, strona stoi przed [konkretne wydarzenie u klienta]. Jak w następnym — już po."
+    },
+    {
+      "dzien": 27,
+      "tytul": "Najlepszy argument na początek i na koniec",
+      "technika": "Efekt pierwszeństwa i świeżości",
+      "tekst": "Ze środka rozmowy klient nie zapamięta prawie nic. Zapamięta pierwszą rzecz, którą powiedziałeś, i ostatnią. Ustaw więc dwa najmocniejsze punkty na tych pozycjach, a szczegóły techniczne wrzuć do środka — nie odwrotnie, jak wychodzi naturalnie, gdy się improwizuje.",
+      "dlaczego": "Efekt pozycji szeregowej jest jednym z najstarszych i najlepiej potwierdzonych zjawisk w badaniach nad pamięcią.",
+      "skrypt": "[pierwsze zdanie] Dzwonię, bo ma Pan sześćdziesiąt opinii w Google i stronę, która ich nie wykorzystuje.\n[ostatnie zdanie] Czternaście dni roboczych i ma Pan to z głowy. Ruszamy?"
+    },
+    {
+      "dzien": 28,
+      "tytul": "Zapytaj o ocenę w skali",
+      "technika": "Pytanie skalujące",
+      "tekst": "„W skali od jednego do dziesięciu, na ile to dla Pana ma sens?” Odpowiedź poniżej siódemki mówi Ci, że masz problem, którego nie widzisz. Odpowiedź siedem albo osiem otwiera najlepsze pytanie w całej rozmowie: „czego brakuje do dziesiątki?” — i klient sam Ci powie, co domknąć.",
+      "dlaczego": "Pytanie skalujące wyciąga ukrytą obiekcję bez konfrontacji, bo klient odpowiada na liczbę, a nie broni stanowiska.",
+      "skrypt": "W skali od jednego do dziesięciu — na ile to, co pokazałem, ma dla Pana sens? … Siedem. A czego brakuje do dziesięciu?"
+    },
+    {
+      "dzien": 29,
+      "tytul": "Zapytaj wprost, co jest nie tak",
+      "technika": "Pytanie negatywne",
+      "tekst": "Pod koniec rozmowy, zanim poprosisz o decyzję: „Czy jest coś, co sprawia, że to dla Pana nie ma sensu?”. Klient dostaje jawne pozwolenie na powiedzenie „nie” i zwykle zamiast odmowy wyrzuca prawdziwą obiekcję, którą inaczej zabrałby ze sobą do „muszę się zastanowić”.",
+      "dlaczego": "Niewypowiedziana obiekcja nigdy się nie rozwiązuje sama. Wyciągnięta na stół przed prośbą o decyzję jest jeszcze do obsłużenia.",
+      "skrypt": "Zanim zapytam o decyzję — czy jest coś, co sprawia, że to dla Pana nie ma sensu? Wolę usłyszeć teraz."
+    },
+    {
+      "dzien": 30,
+      "tytul": "Trzeci telefon nie jest nachalny",
+      "technika": "Wytrwałość follow-upu",
+      "tekst": "Handlowcy odpuszczają po pierwszej albo drugiej próbie, bo trzeci kontakt wydaje im się nachalny. Klient odbiera to inaczej: ktoś, kto zniknął po jednym telefonie, sam pokazał, że mu nie zależy. Warunek jest jeden — każdy kontakt musi wnosić coś nowego, a nie być pytaniem „i jak, przemyślał Pan?”.",
+      "dlaczego": "Odstęp między liczbą kontaktów, po której sprzedawcy rezygnują, a liczbą, po której decyzje faktycznie zapadają, to jedno z najbardziej powtarzalnych ustaleń w danych sprzedażowych.",
+      "skrypt": "Dzwonię trzeci raz i ostatni, więc powiem wprost: albo to robimy, albo Pan mówi nie i przestaję zawracać głowę. Co wybieramy?"
+    }
+  ],
+  "materialy": [
+    {"dzien": 1, "typ": "Badanie", "tytul": "Gong Labs — techniki zamykania, które faktycznie działają", "zrodlo": "gong.io", "czas": "12 min", "url": "https://www.gong.io/resources/labs/closing-techniques/", "po_co": "Analiza rozmów zamykających wyciągnięta z bazy ponad miliona nagrań. Twarde dane zamiast opinii trenerów."},
+    {"dzien": 2, "typ": "Artykuł", "tytul": "17 technik cold callingu wg danych z rozmów", "zrodlo": "gong.io", "czas": "15 min", "url": "https://www.gong.io/blog/cold-calling-tips", "po_co": "Twoje otwarcie decyduje o reszcie. Tu jest zebrane, co w otwarciach mierzalnie działa."},
+    {"dzien": 3, "typ": "Podcast", "tytul": "Nowoczesna Sprzedaż i Marketing — Szymon Negacz", "zrodlo": "Spotify", "czas": "wybierz odcinek", "url": "https://open.spotify.com/show/6qRcpt8brJ4KR4W5miO2Q6", "po_co": "Najmocniejszy polski podcast o sprzedaży B2B. Realia polskiego rynku, nie amerykańskie kalki."},
+    {"dzien": 4, "typ": "Książka", "tytul": "Never Split the Difference — Chris Voss", "zrodlo": "Amazon", "czas": "książka", "url": "https://www.amazon.com/Never-Split-Difference-Negotiating-Depended/dp/0062407805", "po_co": "Negocjator FBI o tym, jak rozmawiać, gdy druga strona nie chce. Podstawa dla połowy insightów w tym panelu."},
+    {"dzien": 5, "typ": "Artykuł", "tytul": "Siedem reguł wpływu Cialdiniego w praktyce konwersji", "zrodlo": "CXL", "czas": "20 min", "url": "https://cxl.com/blog/cialdinis-principles-persuasion/", "po_co": "Wzajemność, konsekwencja, dowód społeczny, niedobór — z przykładami zastosowania, nie samą teorią."},
+    {"dzien": 6, "typ": "Poradnik", "tytul": "Jak sprzedawać strony małym firmom — 10 kroków", "zrodlo": "Friday", "czas": "18 min", "url": "https://www.fridaywebsitebuilder.com/blog/how-to-sell-websites-to-small-businesses", "po_co": "Dokładnie Twój model sprzedaży. Zwróć uwagę na widełki cenowe — zobaczysz, jak nisko wyceniasz swoją robotę."},
+    {"dzien": 7, "typ": "Artykuł", "tytul": "14 odpowiedzi na obiekcję „za drogo”", "zrodlo": "HubSpot", "czas": "12 min", "url": "https://blog.hubspot.com/sales/price-objection-responses", "po_co": "Weź stąd trzy, które brzmią jak Ty, i wpisz do obiekcje.md. Reszta to korpomowa — odrzuć."},
+    {"dzien": 8, "typ": "Podcast", "tytul": "NSM 054 — Cold calling, cold mailing czy social selling?", "zrodlo": "Apple Podcasts", "czas": "ok. 40 min", "url": "https://podcasts.apple.com/us/podcast/nsm-054-cold-calling-cold-mailing-czy-social-selling/id1441468060?i=1000464389146", "po_co": "Po polsku, o Twoim kanale pozyskania. Posłuchaj w aucie między telefonami."},
+    {"dzien": 9, "typ": "Artykuł", "tytul": "Rozmowa rozpoznawcza a domknięcie — co robią najlepsi", "zrodlo": "gong.io", "czas": "10 min", "url": "https://www.gong.io/blog/deal-closing-discovery-call", "po_co": "Optymalna liczba pytań rozpoznawczych i głębokość drążenia problemu. Zmień pod to swoją kwalifikację."},
+    {"dzien": 10, "typ": "Notatki", "tytul": "Wywiad z Chrisem Vossem — najważniejsze wnioski", "zrodlo": "JB Sales", "czas": "8 min", "url": "https://blog.jbarrows.com/blog/top-takeaways-chris-voss/", "po_co": "Skrót Vossa pod sprzedaż, nie pod porwania. Szybsze niż cała książka, jeśli nie masz czasu."},
+    {"dzien": 11, "typ": "Poradnik", "tytul": "Jak sprzedawać strony lokalnym firmom — przewodnik 2026", "zrodlo": "Locamap", "czas": "20 min", "url": "https://www.locamaphq.com/blog/how-to-sell-websites-to-local-businesses", "po_co": "Sygnały, po których poznasz firmę gotową kupić stronę. Przyda się przy przesiewaniu tych 477 leadów."},
+    {"dzien": 12, "typ": "Artykuł", "tytul": "Obiekcja cenowa — framework i gotowe skrypty", "zrodlo": "Prospeo", "czas": "14 min", "url": "https://prospeo.io/s/price-objection", "po_co": "Struktura odpowiedzi na „za drogo”: nie zbijaj, przeramuj. Porównaj ze swoim wpisem w obiekcje.md."},
+    {"dzien": 13, "typ": "Podcast", "tytul": "Świry Sprzedaży B2B", "zrodlo": "Apple Podcasts", "czas": "wybierz odcinek", "url": "https://podcasts.apple.com/us/podcast/%C5%9Bwiry-sprzeda%C5%BCy-b2b/id1712105606", "po_co": "Polskie case studies z różnych branż. Dobre na dzień, w którym nie chce się słuchać teorii."},
+    {"dzien": 14, "typ": "Artykuł", "tytul": "Reguły wpływu — pełne omówienie z przykładami", "zrodlo": "SUE Behavioural Design", "czas": "16 min", "url": "https://www.suebehaviouraldesign.com/en/blog/cialdini-principles-of-persuasion/", "po_co": "Druga perspektywa na Cialdiniego, mocniej od strony projektowania zachowań niż marketingu."},
+    {"dzien": 15, "typ": "Poradnik PL", "tytul": "Cold calling — praktyczny przewodnik", "zrodlo": "CallPage", "czas": "15 min", "url": "https://www.callpage.pl/blog/posts/cold-calling-praktyczny-przewodnik", "po_co": "Po polsku, o polskich realiach dzwonienia na zimno. Bez amerykańskiego entuzjazmu."},
+    {"dzien": 16, "typ": "Artykuł", "tytul": "Jak obsługiwać obiekcje cenowe — 27 odpowiedzi", "zrodlo": "NetHunt", "czas": "18 min", "url": "https://nethunt.com/blog/price-sales-objections/", "po_co": "Duży zestaw. Nie ucz się wszystkich — wybierz trzy pasujące do warsztatów i kamieniarstwa."},
+    {"dzien": 17, "typ": "Poradnik", "tytul": "Najlepszy sposób sprzedaży stron małym firmom", "zrodlo": "SiteSwan", "czas": "12 min", "url": "https://www.siteswan.com/the-best-way-to-sell-websites-to-small-businesses", "po_co": "Model sprzedaży bardzo bliski Twojemu: cena, abonament, cykl decyzyjny."},
+    {"dzien": 18, "typ": "Notatki", "tytul": "Wywieranie wpływu — streszczenie książki Cialdiniego", "zrodlo": "grahammann.net", "czas": "10 min", "url": "https://grahammann.net/book-notes/influence-robert-cialdini", "po_co": "Cała książka w dziesięć minut. Wróć do niej, gdy któraś reguła przestanie Ci działać."},
+    {"dzien": 19, "typ": "Wideo PL", "tytul": "Cold calling — skuteczna technika pozyskiwania klientów", "zrodlo": "YouTube", "czas": "wideo", "url": "https://www.youtube.com/watch?v=o_2cSjc-5hI", "po_co": "Po polsku, do obejrzenia przy kawie przed sesją telefonów."},
+    {"dzien": 20, "typ": "Artykuł", "tytul": "Obiekcja „cena za wysoka” — jak ją rozbroić", "zrodlo": "Salesmate", "czas": "12 min", "url": "https://www.salesmate.io/blog/price-is-too-high/", "po_co": "O tym, że obiekcja cenowa najczęściej nie dotyczy ceny. Kluczowe dla Twojego etapu."},
+    {"dzien": 21, "typ": "Podcast", "tytul": "Chris Voss u Bregman Partners — negocjacje w praktyce", "zrodlo": "Bregman Partners", "czas": "ok. 45 min", "url": "https://bregmanpartners.com/podcast/chris-voss-never-split-the-difference/", "po_co": "Voss mówiony, nie pisany. Słychać intonację, którą trudno oddać w książce — a ona jest połową techniki."},
+    {"dzien": 22, "typ": "Poradnik PL", "tytul": "Cold calling — jak przygotować kampanię", "zrodlo": "Artur Smolicki", "czas": "15 min", "url": "https://artursmolicki.com/blog/cold-calling-i-jego-efektywnosc/", "po_co": "O organizacji dzwonienia, nie o samej rozmowie. Przyda się przy planowaniu dnia na telefonach."},
+    {"dzien": 23, "typ": "Poradnik", "tytul": "Strategie sprzedaży web designu lokalnym firmom", "zrodlo": "QCFixer", "czas": "16 min", "url": "https://www.qcfixer.com/2026/04/20/marketing-strategies-to-sell-web-design-to-local-small-businesses/", "po_co": "Dwanaście podejść do pozyskania. Sprawdź, czy któreś da się dołożyć do cold callingu."},
+    {"dzien": 24, "typ": "Artykuł", "tytul": "Obiekcja „za drogo” w sprzedaży B2B", "zrodlo": "Sellible", "czas": "10 min", "url": "https://blog.sellible.ai/how-to-handle-the-too-expensive-objection-in-b2b-sales/", "po_co": "Krótsze i bardziej praktyczne niż większość. Dobre na powtórkę przed rozmową o cenie."},
+    {"dzien": 25, "typ": "Kurs", "tytul": "Never Split the Difference w sprzedaży — darmowy kurs", "zrodlo": "Class Central", "czas": "kurs", "url": "https://www.classcentral.com/course/codesignal-never-split-the-difference-negotiations-in-sales-416644", "po_co": "Techniki Vossa przełożone na rozmowy handlowe, z ćwiczeniami. Rozłóż na kilka dni."},
+    {"dzien": 26, "typ": "Zestawienie PL", "tytul": "Polskie podcasty o sprzedaży — przegląd", "zrodlo": "Livespace", "czas": "8 min", "url": "https://www.livespace.io/pl/blog/5-polskich-podcastow-o-sprzedazy/", "po_co": "Wybierz sobie stały podcast na dojazdy. Jeden, słuchany regularnie, bije dziesięć przypadkowych."},
+    {"dzien": 27, "typ": "Poradnik", "tytul": "Sprzedaż usług stron lokalnym firmom — przewodnik wideo", "zrodlo": "Vendasta", "czas": "20 min", "url": "https://www.vendasta.com/blog/sell-website-services-local-businesses/", "po_co": "Struktura oferty i rozmowy przy sprzedaży stron. Porównaj ze swoim playbookiem."},
+    {"dzien": 28, "typ": "Artykuł", "tytul": "Obiekcja cenowa — podejście przez wartość", "zrodlo": "Exec", "czas": "10 min", "url": "https://www.exec.com/learn/price-is-too-high", "po_co": "O przeramowaniu kosztu na inwestycję. Dokładnie to, czego brakuje przy Twoim 1990 netto."},
+    {"dzien": 29, "typ": "Zestawienie PL", "tytul": "Piętnaście polskich podcastów o sprzedaży", "zrodlo": "hotLead", "czas": "10 min", "url": "https://hotlead.pl/pozyskiwanie-klientow/polskie-podcasty-o-sprzedazy-10-najciekawszych-audycji/", "po_co": "Zapas na kolejne miesiące dojazdów. Zapisz sobie dwa, które brzmią sensownie."},
+    {"dzien": 30, "typ": "Artykuł", "tytul": "Świeże spojrzenie na Never Split the Difference", "zrodlo": "Teamgate", "czas": "12 min", "url": "https://www.teamgate.com/blog/never-split-the-difference/", "po_co": "Podsumowanie miesiąca: wróć do podstaw i sprawdź, ile z tego faktycznie robisz w rozmowach."}
+  ]
+}
