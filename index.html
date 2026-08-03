@@ -136,6 +136,48 @@
   .modal-box { background:var(--surface); border:1px solid var(--border-strong); border-radius:4px; padding:22px; max-width:520px; width:100%; max-height:88vh; overflow:auto; }
   .hint { font-size:12.5px; color:var(--muted); margin:6px 0 0; }
 
+  /* kalendarz */
+  .kal-pasek { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
+  .kal-pasek button.mini[data-widok].on { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  .siatka { display:grid; grid-template-columns:repeat(7,1fr); background:var(--border); gap:1px;
+    border:1px solid var(--border); border-radius:3px; overflow:hidden; }
+  .siatka .dow { background:var(--surface-2); padding:8px 10px; font-family:var(--mono); font-size:10.5px;
+    letter-spacing:.09em; text-transform:uppercase; color:var(--muted); text-align:center; }
+  .kom { background:var(--surface); min-height:104px; padding:6px 7px; display:flex; flex-direction:column; gap:3px; cursor:pointer; }
+  .kom:hover { background:var(--surface-2); }
+  .kom.obcy { opacity:.42; }
+  .kom.wolne { background:color-mix(in srgb,var(--surface-2) 55%,var(--surface)); }
+  .kom.dzis { box-shadow:inset 0 0 0 2px var(--accent); }
+  .kom-nr { font-family:var(--mono); font-size:12px; font-variant-numeric:tabular-nums; color:var(--muted); align-self:flex-end; }
+  .kom.dzis .kom-nr { color:var(--accent); font-weight:700; }
+  .wp { font-size:11.5px; line-height:1.3; padding:3px 5px; border-radius:2px; border-left:3px solid var(--accent);
+    background:var(--accent-soft); color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .wp b { font-family:var(--mono); font-size:11px; font-weight:600; }
+  .wp.warn { border-left-color:var(--warn); background:var(--warn-soft); }
+  .wp.crit { border-left-color:var(--crit); background:var(--crit-soft); }
+  .wp.done { border-left-color:var(--border-strong); background:var(--surface-2); color:var(--muted); text-decoration:line-through; }
+  .kom-wiecej { font-size:11px; color:var(--muted); padding-left:4px; }
+
+  .tydz { display:grid; grid-template-columns:52px repeat(7,1fr); background:var(--border); gap:1px;
+    border:1px solid var(--border); border-radius:3px; overflow:hidden; }
+  .tydz .naglowek { background:var(--surface-2); padding:7px 4px; text-align:center; font-size:12px; }
+  .tydz .naglowek .dn { font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+  .tydz .naglowek .nr { font-family:var(--mono); font-size:16px; font-weight:600; }
+  .tydz .naglowek.dzis .nr { color:var(--accent); }
+  .tydz .godz { background:var(--surface-2); font-family:var(--mono); font-size:10.5px; color:var(--muted);
+    text-align:right; padding:2px 6px 0 0; height:38px; }
+  .slot { background:var(--surface); height:38px; cursor:pointer; position:relative; padding:1px; }
+  .slot:hover { background:var(--surface-2); }
+  .slot.wolne { background:color-mix(in srgb,var(--surface-2) 55%,var(--surface)); }
+  .slot .wp { white-space:normal; height:100%; display:flex; flex-direction:column; justify-content:center; font-size:11px; }
+
+  @media (max-width:760px) {
+    .kom { min-height:78px; }
+    .wp { font-size:10.5px; }
+    .tydz { grid-template-columns:40px repeat(7,1fr); }
+  }
+
   /* liczniki */
   .liczniki { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
   .licznik { background:var(--surface-2); border:1px solid var(--border); border-radius:3px; padding:14px; display:flex; flex-direction:column; gap:8px; }
@@ -234,29 +276,26 @@
       <div class="sec-note">Każdy wpis leci na telefon przez ntfy godzinę wcześniej — i tu, jeśli panel jest otwarty.</div>
     </div>
 
-    <div class="card">
-      <div class="form-grid">
-        <label class="f">Data<input type="date" id="k-data"></label>
-        <label class="f">Godzina<input type="time" id="k-godz"></label>
-        <label class="f">Klient<input type="text" id="k-klient" placeholder="nazwa firmy"></label>
-        <label class="f">Co robimy<input type="text" id="k-co" placeholder="Telefon po decyzję"></label>
-        <label class="f">Telefon<input type="tel" id="k-tel" placeholder="opcjonalnie"></label>
-        <button class="primary" id="k-dodaj">Dodaj wpis</button>
+    <div class="kal-pasek">
+      <div class="row">
+        <button class="mini" id="kal-prev" title="poprzedni">◀</button>
+        <button class="mini" id="kal-dzis">Dziś</button>
+        <button class="mini" id="kal-next" title="następny">▶</button>
+        <strong id="kal-tytul" style="margin-left:8px;font-size:16px"></strong>
       </div>
-      <p class="hint" id="k-alert"></p>
+      <div class="row" style="margin-left:auto">
+        <button class="mini" data-widok="miesiac">Miesiąc</button>
+        <button class="mini" data-widok="tydzien">Tydzień</button>
+        <button class="mini" data-widok="lista">Lista</button>
+        <button class="primary mini" id="kal-nowy">+ Nowy wpis</button>
+      </div>
     </div>
 
-    <div class="block">
-      <div class="row" style="margin-bottom:10px">
-        <button class="mini" id="k-powiadom">Włącz przypomnienia w przeglądarce</button>
-        <span class="hint" id="k-powiadom-stan"></span>
-      </div>
-      <div id="k-lista"></div>
-    </div>
+    <div id="kal-widok"></div>
 
-    <div class="block">
-      <div class="sec-head"><h2 style="font-size:16px">Historia</h2><div class="sec-note">Wpisy z przeszłości — zostają jako ślad.</div></div>
-      <div id="k-historia"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="mini" id="k-powiadom">Włącz przypomnienia w przeglądarce</button>
+      <span class="hint" id="k-powiadom-stan"></span>
     </div>
   </section>
 
@@ -442,6 +481,29 @@
   </div>
 </div>
 
+<!-- wpis kalendarza -->
+<div class="modal" id="modal-wpis">
+  <div class="modal-box">
+    <h2 style="margin-bottom:14px" id="wp-tytul">Nowy wpis</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <label class="f">Data<input type="date" id="wp-data"></label>
+      <label class="f">Godzina<input type="time" id="wp-godz"></label>
+    </div>
+    <label class="f" style="margin-bottom:10px">Klient<input type="text" id="wp-klient" placeholder="nazwa firmy"></label>
+    <label class="f" style="margin-bottom:10px">Co robimy<input type="text" id="wp-co" placeholder="Telefon po decyzję"></label>
+    <label class="f" style="margin-bottom:10px">Telefon<input type="tel" id="wp-tel" placeholder="opcjonalnie"></label>
+    <label class="row" style="gap:8px;margin-bottom:4px;font-size:14px">
+      <input type="checkbox" id="wp-zrobione" style="width:auto"> Zrobione
+    </label>
+    <p class="hint" id="wp-alert"></p>
+    <div class="row" style="margin-top:16px">
+      <button class="primary" id="wp-zapisz">Zapisz</button>
+      <button id="wp-anuluj">Anuluj</button>
+      <button class="danger" id="wp-usun" style="margin-left:auto">Usuń</button>
+    </div>
+  </div>
+</div>
+
 <!-- wpłaty -->
 <div class="modal" id="modal-wplata">
   <div class="modal-box">
@@ -523,7 +585,8 @@ async function wyslij(){
 }
 
 /* ---------------- pomocnicze ---------------- */
-const dzis = () => new Date().toISOString().slice(0,10);
+function iso(d){ const x = new Date(d); x.setMinutes(x.getMinutes() - x.getTimezoneOffset()); return x.toISOString().slice(0,10); }
+const dzis = () => iso(new Date());
 const uid = () => Math.random().toString(36).slice(2,10);
 const zl = n => (Math.round(n)).toLocaleString("pl-PL") + " zł";
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -547,75 +610,211 @@ function trasa(){
 window.addEventListener("hashchange", trasa);
 
 /* ---------------- KALENDARZ ---------------- */
+const DOW = ["pon","wt","śr","czw","pt","sob","ndz"];
+const MIESIACE = ["styczeń","luty","marzec","kwiecień","maj","czerwiec","lipiec","sierpień","wrzesień","październik","listopad","grudzień"];
+const MIES_D = ["stycznia","lutego","marca","kwietnia","maja","czerwca","lipca","sierpnia","września","października","listopada","grudnia"];
+const GODZ_OD = 7, GODZ_DO = 20;
+
+let widokKal = localStorage.getItem("impulseo.widokKal") || "miesiac";
+let kursor = new Date();
+
+function poniedzialek(d){ const x = new Date(d); const dow = (x.getDay()+6)%7; x.setDate(x.getDate()-dow); x.setHours(0,0,0,0); return x; }
 function wpisyPosortowane(){ return [...(D.kalendarz||[])].sort((a,b)=> dtWpisu(a) - dtWpisu(b)); }
+function wpisyDnia(ds){ return wpisyPosortowane().filter(w => w.data === ds); }
+
+function klasaWpisu(w){
+  if (w.zrobione) return "done";
+  const min = (dtWpisu(w) - new Date()) / 60000;
+  return min < 0 ? "crit" : min <= 60*24 ? "warn" : "";
+}
+function kaflWpisu(w){
+  return `<div class="wp ${klasaWpisu(w)}" data-wpis="${w.id}" title="${esc(w.klient)} — ${esc(w.co||"")}"><b>${esc(w.godzina||"")}</b> ${esc(w.klient)}</div>`;
+}
+
+function rysujMiesiac(){
+  const rok = kursor.getFullYear(), mies = kursor.getMonth();
+  const start = poniedzialek(new Date(rok, mies, 1));
+  const ostatni = new Date(rok, mies+1, 0);
+  const koniec = poniedzialek(ostatni); koniec.setDate(koniec.getDate()+6);
+  const ile = Math.round((koniec - start)/86400000) + 1;
+
+  let h = `<div class="siatka">` + DOW.map(d=>`<div class="dow">${d}</div>`).join("");
+  for (let i=0; i<ile; i++){
+    const d = new Date(start); d.setDate(start.getDate()+i);
+    const ds = iso(d), wp = wpisyDnia(ds);
+    const weekend = d.getDay()===0 || d.getDay()===6;
+    h += `<div class="kom ${d.getMonth()!==mies?"obcy":""} ${weekend?"wolne":""} ${ds===dzis()?"dzis":""}" data-dodaj="${ds}">
+      <div class="kom-nr">${d.getDate()}</div>
+      ${wp.slice(0,3).map(kaflWpisu).join("")}
+      ${wp.length>3 ? `<div class="kom-wiecej">+${wp.length-3} więcej</div>` : ""}
+    </div>`;
+  }
+  return h + `</div>`;
+}
+
+function rysujTydzien(){
+  const start = poniedzialek(kursor);
+  const dni = [...Array(7)].map((_,i)=>{ const d = new Date(start); d.setDate(start.getDate()+i); return d; });
+
+  let h = `<div class="tydz"><div class="naglowek"></div>`;
+  dni.forEach(d => {
+    h += `<div class="naglowek ${iso(d)===dzis()?"dzis":""}">
+      <div class="dn">${DOW[(d.getDay()+6)%7]}</div><div class="nr">${d.getDate()}</div></div>`;
+  });
+
+  // wpisy poza siatką godzin (przed 7:00 / po 20:00) — nad tabelą, żeby nie zniknęły
+  const poza = dni.flatMap(d => wpisyDnia(iso(d))).filter(w => {
+    const g = parseInt(String(w.godzina).slice(0,2)); return isNaN(g) || g < GODZ_OD || g > GODZ_DO;
+  });
+
+  for (let g = GODZ_OD; g <= GODZ_DO; g++){
+    h += `<div class="godz">${String(g).padStart(2,"0")}:00</div>`;
+    dni.forEach(d => {
+      const ds = iso(d);
+      const wp = wpisyDnia(ds).filter(w => parseInt(String(w.godzina).slice(0,2)) === g);
+      const weekend = d.getDay()===0 || d.getDay()===6;
+      h += `<div class="slot ${weekend?"wolne":""}" data-dodaj="${ds}" data-godz="${String(g).padStart(2,"0")}:00">${wp.map(kaflWpisu).join("")}</div>`;
+    });
+  }
+  h += `</div>`;
+  if (poza.length) h += `<div class="card" style="margin-top:10px"><div class="eyebrow" style="margin-bottom:8px">Poza godzinami ${GODZ_OD}–${GODZ_DO}</div>
+    <div class="row">${poza.map(kaflWpisu).join("")}</div></div>`;
+  return h;
+}
+
+function rysujListeKal(){
+  const teraz = new Date();
+  const wsz = wpisyPosortowane();
+  const przysz = wsz.filter(w => dtWpisu(w) >= new Date(teraz.getFullYear(),teraz.getMonth(),teraz.getDate()));
+  const hist = wsz.filter(w => dtWpisu(w) < new Date(teraz.getFullYear(),teraz.getMonth(),teraz.getDate())).reverse();
+  return tabelaKal(przysz, "Nadchodzące") + (hist.length ? `<div class="block">` + tabelaKal(hist.slice(0,30), "Historia") + `</div>` : "");
+}
+
+function tabelaKal(lista, tytul){
+  if (!lista.length) return `<div class="card"><p style="margin:0;color:var(--muted);font-size:14px">${tytul}: brak wpisów.</p></div>`;
+  const teraz = new Date();
+  const rows = lista.map(w => {
+    const zaMin = (dtWpisu(w) - teraz) / 60000;
+    const kl = (w.zrobione || zaMin < 0) ? "past" : zaMin <= 60 ? "now" : zaMin <= 60*24 ? "soon" : "";
+    const status = w.zrobione ? `<span class="chip ok">zrobione</span>`
+      : zaMin < 0 ? `<span class="chip crit">po terminie</span>`
+      : zaMin <= 60 ? `<span class="chip crit">za chwilę</span>`
+      : zaMin <= 60*24 ? `<span class="chip warn">dziś/jutro</span>` : `<span class="chip neutral">czeka</span>`;
+    return `<tr class="${kl}" style="cursor:pointer" data-wpis="${w.id}">
+      <td class="date">${esc(w.data)}<br><strong>${esc(w.godzina||"—")}</strong></td>
+      <td class="lead">${esc(w.klient)}${w.telefon?`<br><span style="font-family:var(--mono);font-size:12px;color:var(--muted)">${esc(w.telefon)}</span>`:""}</td>
+      <td>${esc(w.co)}</td>
+      <td>${status}</td>
+      <td style="white-space:nowrap">
+        <button class="mini" data-kal-zrob="${w.id}">${w.zrobione?"cofnij":"zrobione"}</button></td>
+    </tr>`;
+  }).join("");
+  return `<div class="tablewrap"><table><thead><tr><th>${esc(tytul)}</th><th>Klient</th><th>Co robimy</th><th>Stan</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function tytulKal(){
+  if (widokKal === "miesiac") return MIESIACE[kursor.getMonth()] + " " + kursor.getFullYear();
+  if (widokKal === "tydzien"){
+    const a = poniedzialek(kursor), b = new Date(a); b.setDate(a.getDate()+6);
+    return a.getMonth() === b.getMonth()
+      ? `${a.getDate()}–${b.getDate()} ${MIES_D[a.getMonth()]} ${a.getFullYear()}`
+      : `${a.getDate()} ${MIES_D[a.getMonth()]} – ${b.getDate()} ${MIES_D[b.getMonth()]} ${b.getFullYear()}`;
+  }
+  return "Wszystkie wpisy";
+}
 
 function rysujKalendarz(){
   const teraz = new Date();
   const wsz = wpisyPosortowane();
   const przysz = wsz.filter(w => dtWpisu(w) >= new Date(teraz.getFullYear(),teraz.getMonth(),teraz.getDate()));
-  const hist = wsz.filter(w => dtWpisu(w) < new Date(teraz.getFullYear(),teraz.getMonth(),teraz.getDate())).reverse();
-
-  document.getElementById("k-lista").innerHTML = tabelaKal(przysz, true);
-  document.getElementById("k-historia").innerHTML = hist.length ? tabelaKal(hist.slice(0,20), false)
-    : `<div class="card"><p style="margin:0;color:var(--muted);font-size:14px">Nic jeszcze nie minęło.</p></div>`;
-
   const naDzis = przysz.filter(w => w.data === dzis());
+
+  document.getElementById("kal-tytul").textContent = tytulKal();
+  document.querySelectorAll("[data-widok]").forEach(b => b.classList.toggle("on", b.dataset.widok === widokKal));
+  document.getElementById("kal-widok").innerHTML =
+    widokKal === "miesiac" ? rysujMiesiac() : widokKal === "tydzien" ? rysujTydzien() : rysujListeKal();
+
   const el = document.getElementById("dzis-kalendarz");
   const nast = przysz.slice(0,5);
-  el.innerHTML = nast.length ? tabelaKal(nast, true)
+  el.innerHTML = nast.length ? tabelaKal(nast, "Kiedy")
     : `<div class="banner warn"><div class="banner-mark">Pusto</div><div><p>Ani jednego umówionego telefonu. To nie jest wolny dzień — to jest dzień bez szans na podpis.</p></div></div>`;
+
   podepnijKal();
   return { naDzis, przysz };
 }
 
-function tabelaKal(lista, akcje){
-  if (!lista.length) return `<div class="card"><p style="margin:0;color:var(--muted);font-size:14px">Brak wpisów.</p></div>`;
-  const teraz = new Date();
-  const rows = lista.map(w => {
-    const dt = dtWpisu(w);
-    const zaMin = (dt - teraz) / 60000;
-    const kl = w.zrobione ? "past" : (zaMin < 0 ? "past" : zaMin <= 60 ? "now" : zaMin <= 60*24 ? "soon" : "");
-    const status = w.zrobione ? `<span class="chip ok">zrobione</span>`
-      : zaMin < 0 ? `<span class="chip crit">po terminie</span>`
-      : zaMin <= 60 ? `<span class="chip crit">za chwilę</span>`
-      : zaMin <= 60*24 ? `<span class="chip warn">dziś/jutro</span>` : `<span class="chip neutral">czeka</span>`;
-    return `<tr class="${kl}">
-      <td class="date">${esc(w.data)}<br><strong>${esc(w.godzina||"—")}</strong></td>
-      <td class="lead">${esc(w.klient)}${w.telefon?`<br><span style="font-family:var(--mono);font-size:12px;color:var(--muted)">${esc(w.telefon)}</span>`:""}</td>
-      <td>${esc(w.co)}</td>
-      <td>${status}</td>
-      ${akcje ? `<td style="white-space:nowrap">
-        <button class="mini" data-kal-zrob="${w.id}">${w.zrobione?"cofnij":"zrobione"}</button>
-        <button class="mini danger" data-kal-usun="${w.id}">usuń</button></td>` : `<td></td>`}
-    </tr>`;
-  }).join("");
-  return `<div class="tablewrap"><table><thead><tr><th>Kiedy</th><th>Klient</th><th>Co robimy</th><th>Stan</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
-}
-
 function podepnijKal(){
-  document.querySelectorAll("[data-kal-zrob]").forEach(b => b.onclick = () => {
-    const w = D.kalendarz.find(x=>x.id===b.dataset.kalZrob); if(!w) return;
+  document.querySelectorAll("[data-wpis]").forEach(e => e.onclick = ev => {
+    if (ev.target.dataset.kalZrob !== undefined) return;
+    ev.stopPropagation();
+    otworzWpis(e.dataset.wpis);
+  });
+  document.querySelectorAll("[data-dodaj]").forEach(e => e.onclick = () => {
+    otworzWpis(null, e.dataset.dodaj, e.dataset.godz || "");
+  });
+  document.querySelectorAll("[data-kal-zrob]").forEach(b => b.onclick = ev => {
+    ev.stopPropagation();
+    const w = D.kalendarz.find(x => x.id === b.dataset.kalZrob); if (!w) return;
     w.zrobione = !w.zrobione; wyslij(); rysuj();
   });
-  document.querySelectorAll("[data-kal-usun]").forEach(b => b.onclick = () => {
-    D.kalendarz = D.kalendarz.filter(x=>x.id!==b.dataset.kalUsun); wyslij(); rysuj();
-  });
 }
 
-document.getElementById("k-dodaj").onclick = () => {
-  const data = document.getElementById("k-data").value;
-  const godzina = document.getElementById("k-godz").value;
-  const klient = document.getElementById("k-klient").value.trim();
-  const co = document.getElementById("k-co").value.trim();
-  const telefon = document.getElementById("k-tel").value.trim();
-  const alert = document.getElementById("k-alert");
-  if (!data || !klient) { alert.textContent = "Data i klient są obowiązkowe."; return; }
-  if (!godzina) { alert.textContent = "Bez godziny przypomnienie nie poleci. Wpisz konkretną godzinę."; return; }
-  D.kalendarz.push({ id:uid(), data, godzina, klient, co: co || "Telefon", telefon, zrobione:false });
-  alert.textContent = "Wpisane: " + klient + ", " + data + " " + godzina + ". Przypomnienie godzinę wcześniej.";
-  ["k-klient","k-co","k-tel"].forEach(i=>document.getElementById(i).value="");
+/* --- modal wpisu --- */
+let edytowanyWpis = null;
+function otworzWpis(id, data, godz){
+  edytowanyWpis = id || null;
+  const w = id ? (D.kalendarz||[]).find(x => x.id === id) : null;
+  document.getElementById("wp-tytul").textContent = w ? "Wpis — " + w.klient : "Nowy wpis";
+  document.getElementById("wp-data").value = w ? w.data : (data || dzis());
+  document.getElementById("wp-godz").value = w ? w.godzina : (godz || "");
+  document.getElementById("wp-klient").value = w ? (w.klient||"") : "";
+  document.getElementById("wp-co").value = w ? (w.co||"") : "";
+  document.getElementById("wp-tel").value = w ? (w.telefon||"") : "";
+  document.getElementById("wp-zrobione").checked = w ? !!w.zrobione : false;
+  document.getElementById("wp-alert").textContent = "";
+  document.getElementById("wp-usun").style.display = w ? "" : "none";
+  document.getElementById("modal-wpis").classList.add("on");
+  setTimeout(()=>document.getElementById("wp-klient").focus(), 50);
+}
+document.getElementById("wp-anuluj").onclick = () => document.getElementById("modal-wpis").classList.remove("on");
+document.getElementById("wp-usun").onclick = () => {
+  D.kalendarz = (D.kalendarz||[]).filter(x => x.id !== edytowanyWpis);
+  document.getElementById("modal-wpis").classList.remove("on");
   wyslij(); rysuj();
 };
+document.getElementById("wp-zapisz").onclick = () => {
+  const data = document.getElementById("wp-data").value;
+  const godzina = document.getElementById("wp-godz").value;
+  const klient = document.getElementById("wp-klient").value.trim();
+  const al = document.getElementById("wp-alert");
+  if (!data || !klient) { al.textContent = "Data i klient są obowiązkowe."; return; }
+  if (!godzina) { al.textContent = "Bez godziny przypomnienie nie poleci. Wpisz konkretną godzinę."; return; }
+  const pola = {
+    data, godzina, klient,
+    co: document.getElementById("wp-co").value.trim() || "Telefon",
+    telefon: document.getElementById("wp-tel").value.trim(),
+    zrobione: document.getElementById("wp-zrobione").checked
+  };
+  const w = (D.kalendarz||[]).find(x => x.id === edytowanyWpis);
+  if (w) Object.assign(w, pola); else (D.kalendarz = D.kalendarz || []).push({ id: uid(), ...pola });
+  document.getElementById("modal-wpis").classList.remove("on");
+  wyslij(); rysuj();
+};
+
+document.getElementById("kal-nowy").onclick = () => otworzWpis(null, dzis(), "");
+document.getElementById("kal-dzis").onclick = () => { kursor = new Date(); rysujKalendarz(); };
+document.getElementById("kal-prev").onclick = () => { przesunKursor(-1); };
+document.getElementById("kal-next").onclick = () => { przesunKursor(1); };
+function przesunKursor(k){
+  if (widokKal === "miesiac") kursor = new Date(kursor.getFullYear(), kursor.getMonth()+k, 1);
+  else if (widokKal === "tydzien") { const d = new Date(kursor); d.setDate(d.getDate()+7*k); kursor = d; }
+  rysujKalendarz();
+}
+document.querySelectorAll("[data-widok]").forEach(b => b.onclick = () => {
+  widokKal = b.dataset.widok;
+  localStorage.setItem("impulseo.widokKal", widokKal);
+  rysujKalendarz();
+});
 
 /* powiadomienia w przeglądarce */
 const LS_POW = "impulseo.powiadomione";
@@ -1141,7 +1340,6 @@ document.getElementById("cfg-wyloguj").onclick = () => {
 /* ---------------- start ---------------- */
 (async function start(){
   trasa();
-  document.getElementById("k-data").value = dzis();
   document.getElementById("c-data").value = dzis();
   document.getElementById("licz-data").value = dzis();
   try {
