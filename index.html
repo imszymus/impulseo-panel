@@ -167,10 +167,12 @@
   .tydz .naglowek.dzis .nr { color:var(--accent); }
   .tydz .godz { background:var(--surface-2); font-family:var(--mono); font-size:10.5px; color:var(--muted);
     text-align:right; padding:2px 6px 0 0; height:38px; }
-  .slot { background:var(--surface); height:38px; cursor:pointer; position:relative; padding:1px; }
+  .slot { background:var(--surface); height:38px; cursor:pointer; position:relative; padding:1px; overflow:hidden; }
   .slot:hover { background:var(--surface-2); }
   .slot.wolne { background:color-mix(in srgb,var(--surface-2) 55%,var(--surface)); }
-  .slot .wp { white-space:normal; height:100%; display:flex; flex-direction:column; justify-content:center; font-size:11px; }
+  .slot .wp { white-space:nowrap; height:100%; display:flex; align-items:center; gap:5px; font-size:11px; line-height:1.2; }
+  .slot .wp b { flex:none; }
+  .slot .wp span { overflow:hidden; text-overflow:ellipsis; }
 
   @media (max-width:760px) {
     .kom { min-height:78px; }
@@ -628,7 +630,7 @@ function klasaWpisu(w){
   return min < 0 ? "crit" : min <= 60*24 ? "warn" : "";
 }
 function kaflWpisu(w){
-  return `<div class="wp ${klasaWpisu(w)}" data-wpis="${w.id}" title="${esc(w.klient)} — ${esc(w.co||"")}"><b>${esc(w.godzina||"")}</b> ${esc(w.klient)}</div>`;
+  return `<div class="wp ${klasaWpisu(w)}" data-wpis="${w.id}" title="${esc(w.klient)} — ${esc(w.co||"")}"><b>${esc(w.godzina||"")}</b> <span>${esc(w.klient)}</span></div>`;
 }
 
 function rysujMiesiac(){
