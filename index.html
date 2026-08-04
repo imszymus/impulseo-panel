@@ -1259,10 +1259,12 @@ function rysujWykres(){
   const linia = p.map((v,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(v.wartosc).toFixed(1)}`).join(" ");
   const obszar = `${linia} L${x(n-1).toFixed(1)},${(padT+hG).toFixed(1)} L${x(0).toFixed(1)},${(padT+hG).toFixed(1)} Z`;
 
+  const osY = v => !metrykaAkt().kwota ? String(Math.round(v))
+    : maxV >= 10000 ? Math.round(v/1000)+"k" : Math.round(v).toLocaleString("pl-PL");
   const siatka = [0,.25,.5,.75,1].map(f=>{
     const v = maxV*f, yy = y(v);
     return `<line class="wyk-grid" x1="${padL}" y1="${yy.toFixed(1)}" x2="${W-padR}" y2="${yy.toFixed(1)}"/>
-      <text class="wyk-os" x="${W-padR+8}" y="${(yy+3.5).toFixed(1)}">${metrykaAkt().kwota ? Math.round(v/1000)+"k" : Math.round(v)}</text>`;
+      <text class="wyk-os" x="${W-padR+8}" y="${(yy+3.5).toFixed(1)}">${osY(v)}</text>`;
   }).join("");
 
   const yCel = y(cel);
@@ -1290,7 +1292,8 @@ function rysujWykres(){
     <path class="wyk-obszar" d="${obszar}"/>
     <path class="wyk-linia" d="${linia}"/>
     <circle class="wyk-kropka" cx="${x(n-1).toFixed(1)}" cy="${y(ost.wartosc).toFixed(1)}" r="5"/>
-    <text class="wyk-os" x="${padL}" y="${(yV+hV+13).toFixed(1)}">rozmowy</text>
+    <text class="wyk-os" x="${W-padR+8}" y="${(yV+10).toFixed(1)}">rozmowy</text>
+    <text class="wyk-os" x="${W-padR+8}" y="${(yV+hV).toFixed(1)}">${maxWol}</text>
     ${slupki}${etykiety}
     <g id="pr-cross"></g>
     <rect class="wyk-strefa" id="pr-strefa" x="${padL}" y="0" width="${szer}" height="${H}"/>
@@ -1382,7 +1385,7 @@ function rysujStatsProgresu(p){
       <div class="stat-note">${najlepszy>0?esc(p[idxNaj].pelna):"nic się jeszcze nie ruszyło"}</div></div>
     <div class="stat"><div class="stat-label">Rozmowy w okresie</div>
       <div class="stat-value">${wol}</div>
-      <div class="stat-note">${aktywne>0?`w ${aktywne} ${aktywne===1?"dniu":"dni"} · średnio ${(wol/Math.max(1,aktywne)).toFixed(1)}`:"nic nie policzone"}</div></div>
+      <div class="stat-note">${aktywne>0?`w ${aktywne} ${prZakres==="rok"?(aktywne===1?"miesiącu":"miesiącach"):(aktywne===1?"dniu":"dni")} · średnio ${(wol/Math.max(1,aktywne)).toFixed(1)} ${prZakres==="rok"?"na miesiąc":"dziennie"}`:"nic nie policzone"}</div></div>
     <div class="stat"><div class="stat-label">Na rozmowę</div>
       <div class="stat-value">${wol>0?fmtWart(ost/wol):"—"}</div>
       <div class="stat-note">tyle wart jest jeden telefon w tym okresie</div></div>
