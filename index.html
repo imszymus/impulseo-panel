@@ -249,6 +249,56 @@
   .slot .wp b { flex:none; }
   .slot .wp span { overflow:hidden; text-overflow:ellipsis; }
 
+  /* ---------- pipeline kanban ---------- */
+  .kanban { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(215px,1fr); gap:12px;
+    overflow-x:auto; padding-bottom:10px; }
+  .kol { background:var(--surface-2); border:1px solid var(--border); border-radius:var(--r-md); padding:11px;
+    display:flex; flex-direction:column; gap:9px; min-height:120px; }
+  .kol-glowa { display:flex; align-items:baseline; justify-content:space-between; gap:8px; }
+  .kol-nazwa { font-size:12px; font-weight:730; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); }
+  .kol-licz { font-size:13px; font-weight:730; font-variant-numeric:tabular-nums; color:var(--heading); }
+  .kol-suma { font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .lead-k { background:var(--surface); border:1px solid var(--border); border-radius:var(--r-sm); padding:10px 11px;
+    cursor:pointer; display:flex; flex-direction:column; gap:5px; transition:transform .12s, box-shadow .12s; }
+  .lead-k:hover { transform:translateY(-2px); box-shadow:var(--sh); }
+  .lead-k.gnije { border-color:var(--crit); background:var(--crit-soft); }
+  .lead-k.dzis { border-color:var(--lime-line); background:var(--lime-soft); }
+  .lead-nazwa { font-size:13.5px; font-weight:670; letter-spacing:-0.012em; color:var(--heading); line-height:1.3; }
+  .lead-meta { font-size:11.5px; color:var(--muted); display:flex; gap:7px; flex-wrap:wrap; align-items:center; }
+  .lead-krok { font-size:11.5px; color:var(--muted); line-height:1.35; }
+  .lead-stan { font-size:10.5px; font-weight:730; letter-spacing:.03em; text-transform:uppercase; }
+  .lead-stan.gnije { color:var(--crit); } .lead-stan.dzis { color:var(--lime-deep); }
+  .kol-pusto { font-size:12px; color:var(--muted); text-align:center; padding:14px 0; }
+
+  /* ---------- kolejka dzwonienia ---------- */
+  .dzw-karta { background:var(--ink); color:#E8EFD8; border-radius:var(--r); padding:26px 28px; box-shadow:var(--sh);
+    display:flex; flex-direction:column; gap:14px; }
+  .dzw-karta h2, .dzw-karta h3 { color:#F4F8EA; }
+  .dzw-nazwa { font-size:clamp(24px,3.4vw,32px); font-weight:770; letter-spacing:-0.032em; line-height:1.12; color:#F4F8EA; }
+  .dzw-meta { font-size:13.5px; color:rgba(232,239,216,.62); }
+  .dzw-tel { font-family:var(--mono); font-size:26px; font-weight:700; color:var(--lime); letter-spacing:-0.01em;
+    text-decoration:none; display:inline-block; }
+  .dzw-tel:hover { text-decoration:underline; }
+  .dzw-notka { background:rgba(232,239,216,.07); border-radius:var(--r-sm); padding:11px 13px; font-size:13.5px;
+    color:rgba(232,239,216,.82); line-height:1.5; }
+  .dzw-akcje { display:flex; gap:9px; flex-wrap:wrap; margin-top:4px; }
+  .dzw-akcje button { border-color:rgba(232,239,216,.24); background:rgba(232,239,216,.08); color:#E8EFD8; }
+  .dzw-akcje button:hover { background:rgba(232,239,216,.16); color:#fff; border-color:rgba(232,239,216,.4); }
+  .dzw-akcje button.primary { background:var(--lime); color:var(--ink); border-color:var(--lime); }
+  .dzw-akcje button.primary:hover { background:var(--lime-hi); color:var(--ink); }
+  .dzw-postep { font-size:12px; color:rgba(232,239,216,.5); font-variant-numeric:tabular-nums; }
+
+  /* ---------- karta rozmowy ---------- */
+  .odhacz { display:grid; gap:8px; }
+  .odhacz label { display:flex; align-items:flex-start; gap:11px; padding:11px 13px; border-radius:var(--r-sm);
+    border:1px solid var(--border); background:var(--surface-2); cursor:pointer; transition:all .13s; }
+  .odhacz label:hover { border-color:var(--lime-line); }
+  .odhacz label.zazn { background:var(--lime-soft); border-color:var(--lime-line); }
+  .odhacz input { width:auto; margin-top:2px; accent-color:var(--lime-deep); flex:none; }
+  .odhacz .tyt { font-size:14px; font-weight:650; color:var(--heading); }
+  .odhacz .pod { font-size:12px; color:var(--muted); line-height:1.4; }
+  .odhacz label.klucz .tyt::after { content:" ← ten decyduje"; font-weight:600; color:var(--lime-deep); font-size:11.5px; }
+
   /* ---------- wykres giełdowy ---------- */
   .ticker { display:flex; align-items:flex-end; gap:20px; flex-wrap:wrap; }
   .ticker-glowna { font-size:clamp(34px,5vw,52px); font-weight:790; letter-spacing:-0.045em; line-height:1;
@@ -337,6 +387,8 @@
     <div class="brand">Impulseo <span>· panel</span></div>
     <nav class="tabs" id="tabs">
       <a href="#/dzis">Dziś</a>
+      <a href="#/dzwonie">Dzwonię</a>
+      <a href="#/pipeline">Pipeline</a>
       <a href="#/kalendarz">Kalendarz</a>
       <a href="#/liczby">Liczby</a>
       <a href="#/progres">Progres</a>
@@ -388,6 +440,40 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ============ DZWONIĘ ============ -->
+  <section class="page" id="p-dzwonie">
+    <div class="sec-head">
+      <h2>Dzwonię</h2>
+      <div class="sec-note">Jeden lead na ekranie. Dzwonisz, odhaczasz co padło, ustalasz termin — i następny.</div>
+    </div>
+
+    <div id="dzw-aktualny"></div>
+
+    <div class="block">
+      <div class="sec-head">
+        <h2 style="font-size:16px">Kolejka na dziś</h2>
+        <div class="sec-note" id="dzw-podsum"></div>
+        <div class="row" style="margin-left:auto">
+          <button class="mini" id="dzw-import">Wklej listę leadów</button>
+        </div>
+      </div>
+      <div id="dzw-kolejka"></div>
+    </div>
+  </section>
+
+  <!-- ============ PIPELINE ============ -->
+  <section class="page" id="p-pipeline">
+    <div class="sec-head">
+      <h2>Pipeline</h2>
+      <div class="sec-note">Czerwona karta znaczy, że lead gnije — stoi dłużej, niż jego etap na to pozwala.</div>
+      <div class="row" style="margin-left:auto">
+        <button class="mini" id="pip-nowy">+ Nowy lead</button>
+      </div>
+    </div>
+    <div id="pip-alarm"></div>
+    <div class="kanban" id="pip-kanban"></div>
   </section>
 
   <!-- ============ KALENDARZ ============ -->
@@ -629,6 +715,72 @@
   </div>
 </div>
 
+<!-- karta rozmowy -->
+<div class="modal" id="modal-rozmowa">
+  <div class="modal-box" style="max-width:600px">
+    <div class="row" style="justify-content:space-between;margin-bottom:4px">
+      <h2 id="kr-nazwa">—</h2>
+      <span class="chip neutral" id="kr-etap">—</span>
+    </div>
+    <p class="hint" id="kr-tel" style="margin-bottom:18px"></p>
+
+    <div class="eyebrow" style="margin-bottom:10px">Co padło w rozmowie</div>
+    <div class="odhacz" id="kr-odhacz"></div>
+
+    <div class="eyebrow" style="margin:20px 0 10px">Jak się skończyła</div>
+    <div class="row" id="kr-wyniki"></div>
+
+    <div id="kr-nastepny" style="margin-top:20px"></div>
+
+    <p class="hint" id="kr-alert"></p>
+    <div class="row" style="margin-top:18px">
+      <button class="primary" id="kr-zapisz">Zapisz i dzwoń dalej</button>
+      <button id="kr-anuluj">Anuluj</button>
+    </div>
+  </div>
+</div>
+
+<!-- lead -->
+<div class="modal" id="modal-lead">
+  <div class="modal-box">
+    <h2 style="margin-bottom:14px" id="ld-tytul">Nowy lead</h2>
+    <label class="f" style="margin-bottom:10px">Firma<input type="text" id="ld-nazwa" placeholder="nazwa firmy"></label>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <label class="f">Telefon<input type="tel" id="ld-tel" placeholder="600 000 000"></label>
+      <label class="f">Branża<input type="text" id="ld-branza" placeholder="wulkanizacja"></label>
+    </div>
+    <label class="f" style="margin-bottom:10px">Etap<select id="ld-etap"></select></label>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <label class="f">Następny krok — data<input type="date" id="ld-data"></label>
+      <label class="f">Godzina<input type="time" id="ld-godz"></label>
+    </div>
+    <label class="f" style="margin-bottom:10px">Co robimy<input type="text" id="ld-krok" placeholder="Telefon po decyzję"></label>
+    <label class="f" style="margin-bottom:10px">Notatka<textarea id="ld-notatka" placeholder="ile opinii, co go boli, ile wart jest jego klient"></textarea></label>
+    <div id="ld-historia"></div>
+    <p class="hint" id="ld-alert"></p>
+    <div class="row" style="margin-top:16px">
+      <button class="primary" id="ld-zapisz">Zapisz</button>
+      <button id="ld-anuluj">Anuluj</button>
+      <button class="danger" id="ld-usun" style="margin-left:auto">Usuń</button>
+    </div>
+  </div>
+</div>
+
+<!-- import leadów -->
+<div class="modal" id="modal-import">
+  <div class="modal-box">
+    <h2 style="margin-bottom:6px">Wklej listę leadów</h2>
+    <p class="hint" style="margin-bottom:14px">Jedna firma w linii. Nazwa i telefon oddzielone tabulatorem, przecinkiem albo średnikiem — tak jak wychodzi z arkusza. Trzecia kolumna, jeśli jest, wpada jako branża.</p>
+    <textarea id="imp-tekst" style="min-height:190px;font-family:var(--mono);font-size:13px" placeholder="Wulkanizacja Nowak	600100200	wulkanizacja
+Moga Kamieniarstwo	600300400	kamieniarstwo"></textarea>
+    <p class="hint" id="imp-podglad"></p>
+    <div class="row" style="margin-top:16px">
+      <button class="primary" id="imp-dodaj">Dodaj do kolejki</button>
+      <button id="imp-anuluj">Anuluj</button>
+    </div>
+  </div>
+</div>
+
 <!-- wpis kalendarza -->
 <div class="modal" id="modal-wpis">
   <div class="modal-box">
@@ -676,7 +828,19 @@
 
 /* ---------------- warstwa danych ---------------- */
 const LS_CFG = "impulseo.cfg", LS_DATA = "impulseo.dane";
-const PUSTE = { wersja:1, kalendarz:[], klienci:[], dni:{} };
+const PUSTE = { wersja:2, kalendarz:[], klienci:[], dni:{}, leady:[] };
+
+/* etapy pipeline'u + po ilu dniach bez ruchu lead zaczyna gnić */
+const ETAPY_LEAD = [
+  { k:"lead",     n:"Lead",              gnij:7, opis:"jeszcze nie rozmawialiście" },
+  { k:"kontakt",  n:"Po rozmowie",       gnij:3, opis:"rozmawialiście, nie ma terminu prezentacji" },
+  { k:"umowiona", n:"Prezentacja umówiona", gnij:0, opis:"ma datę i godzinę — bez nich gnije od razu" },
+  { k:"odbyta",   n:"Prezentacja odbyta",   gnij:2, opis:"widział makietę, decyzja nie padła" },
+  { k:"decyzja",  n:"Czeka na decyzję",  gnij:3, opis:"poprosiłeś o podpis, myśli" },
+  { k:"podpis",   n:"Podpisany",         gnij:null, opis:"zamknięte" },
+  { k:"przegrany",n:"Przegrany",         gnij:null, opis:"odmowa albo cisza" }
+];
+const etapDef = k => ETAPY_LEAD.find(e => e.k === k) || ETAPY_LEAD[0];
 
 let cfg = JSON.parse(localStorage.getItem(LS_CFG) || "null") || { owner:"imszymus", repo:"impulseo-dane", path:"dane.json", token:"" };
 let D = JSON.parse(localStorage.getItem(LS_DATA) || "null") || structuredClone(PUSTE);
@@ -747,7 +911,7 @@ function miesiecyOd(dataStr){
 function wplacone(k){ return (k.wplaty||[]).reduce((s,w)=>s + (Number(w.kwota)||0), 0); }
 
 /* ---------------- routing ---------------- */
-const STRONY = ["dzis","kalendarz","liczby","progres","kasa","konwersja","materialy","oferta","skrypty"];
+const STRONY = ["dzis","dzwonie","pipeline","kalendarz","liczby","progres","kasa","konwersja","materialy","oferta","skrypty"];
 function trasa(){
   let h = (location.hash || "#/dzis").replace("#/","");
   if (!STRONY.includes(h)) h = "dzis";
@@ -1186,6 +1350,330 @@ function rysujLiczby(){
   rysujHistorie();
 }
 document.getElementById("licz-data").onchange = rysujLiczby;
+
+/* ---------------- LEADY: pipeline, gnicie, kolejka, karta rozmowy ---------------- */
+function dniOd(d){ if (!d) return 999; return Math.round((new Date(dzis()+"T00:00:00") - new Date(d+"T00:00:00"))/86400000); }
+
+function stanLeada(l){
+  const def = etapDef(l.etap);
+  if (def.gnij === null) return { stan:"zamkniete", powod:def.n };
+  if (l.data_kroku){
+    const r = dniOd(l.data_kroku);
+    if (r > 0)  return { stan:"gnije", powod:`termin minął ${r} ${r===1?"dzień":"dni"} temu`, waga:1000+r };
+    if (r === 0) return { stan:"dzis", powod:`dziś${l.godzina_kroku?" o "+l.godzina_kroku:""}`, waga:500 };
+    return { stan:"czeka", powod:`${l.data_kroku}${l.godzina_kroku?" "+l.godzina_kroku:""}`, waga:0 };
+  }
+  const bez = dniOd(l.ostatni_ruch || l.utworzony);
+  if (def.gnij === 0) return { stan:"gnije", powod:"nie ma daty następnego kroku", waga:2000 };
+  if (bez >= def.gnij) return { stan:"gnije", powod:`${bez} dni bez ruchu`, waga:1000+bez };
+  return { stan:"czeka", powod:"bez daty", waga:100 };
+}
+
+function leadyPilne(){
+  return (D.leady||[]).map(l => ({ l, s:stanLeada(l) }))
+    .filter(x => x.s.stan === "gnije" || x.s.stan === "dzis")
+    .sort((a,b) => (b.s.waga||0) - (a.s.waga||0));
+}
+
+/* --- kanban --- */
+function rysujPipeline(){
+  const leady = D.leady || [];
+  const gnij = leady.map(l=>({l,s:stanLeada(l)})).filter(x=>x.s.stan==="gnije");
+
+  document.getElementById("pip-alarm").innerHTML = gnij.length
+    ? `<div class="banner crit" style="margin-bottom:14px"><div class="banner-mark">Gnije</div><div>
+        <p><strong>${gnij.length} ${gnij.length===1?"lead stoi":"leadów stoi"} dłużej, niż wolno na swoim etapie.</strong>
+        Najgorszy: ${esc(gnij[0].l.nazwa)} — ${esc(gnij[0].s.powod)}. Lead bez ruchu nie czeka, tylko umiera.</p></div></div>`
+    : (leady.length ? `<div class="banner ok" style="margin-bottom:14px"><div class="banner-mark">Czysto</div><div><p>Żaden lead nie gnije. Każdy ma datę następnego kroku.</p></div></div>` : "");
+
+  document.getElementById("pip-kanban").innerHTML = ETAPY_LEAD.map(e => {
+    const w = leady.filter(l => (l.etap||"lead") === e.k);
+    const suma = w.reduce((s,l)=> s + (Number(l.wartosc)||3178), 0);
+    return `<div class="kol">
+      <div class="kol-glowa"><span class="kol-nazwa">${e.n}</span><span class="kol-licz">${w.length}</span></div>
+      ${w.length && e.k!=="przegrany" ? `<div class="kol-suma">${zl(suma)} netto</div>` : ""}
+      ${w.length ? w.map(l => kartaLeada(l)).join("") : `<div class="kol-pusto">—</div>`}
+    </div>`;
+  }).join("");
+
+  document.querySelectorAll("[data-lead]").forEach(el => el.onclick = () => otworzLead(el.dataset.lead));
+}
+
+function kartaLeada(l){
+  const s = stanLeada(l);
+  const kl = s.stan === "gnije" ? "gnije" : s.stan === "dzis" ? "dzis" : "";
+  return `<div class="lead-k ${kl}" data-lead="${l.id}">
+    <div class="lead-nazwa">${esc(l.nazwa)}</div>
+    ${l.branza ? `<div class="lead-meta">${esc(l.branza)}</div>` : ""}
+    ${l.nastepny ? `<div class="lead-krok">${esc(l.nastepny)}</div>` : ""}
+    <div class="lead-stan ${kl}">${esc(s.powod)}</div>
+  </div>`;
+}
+
+/* --- kolejka dzwonienia --- */
+let dzwIdx = 0;
+function rysujDzwonie(){
+  const pilne = leadyPilne();
+  const nowe = (D.leady||[]).map(l=>({l,s:stanLeada(l)}))
+    .filter(x => x.s.stan === "czeka" && (x.l.etap||"lead") === "lead");
+  const kolejka = [...pilne, ...nowe];
+
+  if (dzwIdx >= kolejka.length) dzwIdx = 0;
+  const akt = kolejka[dzwIdx];
+
+  document.getElementById("dzw-podsum").textContent =
+    kolejka.length ? `${kolejka.length} do wykonania · ${pilne.length} pilnych` : "";
+
+  const box = document.getElementById("dzw-aktualny");
+  if (!akt){
+    box.innerHTML = (D.leady||[]).length
+      ? `<div class="banner ok"><div class="banner-mark">Pusto</div><div><p>Kolejka wyczyszczona — żaden lead nie czeka na telefon dziś. Dorzuć nowe przyciskiem „Wklej listę leadów”.</p></div></div>`
+      : `<div class="banner warn"><div class="banner-mark">Start</div><div><p>Nie ma jeszcze żadnego leada. Kliknij <strong>„Wklej listę leadów”</strong> i wrzuć kawałek arkusza — nazwa i telefon w linii. Potem dzwonisz stąd, jeden po drugim.</p></div></div>`;
+    return;
+  }
+
+  const l = akt.l, s = akt.s;
+  const tel = String(l.telefon||"").replace(/\s/g,"");
+  box.innerHTML = `<div class="dzw-karta">
+    <div>
+      <div class="dzw-postep">${dzwIdx+1} z ${kolejka.length}${s.stan==="gnije"?" · GNIJE":""}</div>
+      <div class="dzw-nazwa">${esc(l.nazwa)}</div>
+      <div class="dzw-meta">${esc(etapDef(l.etap).n)}${l.branza?" · "+esc(l.branza):""} · ${esc(s.powod)}</div>
+    </div>
+    ${tel ? `<a class="dzw-tel" href="tel:${esc(tel)}">${esc(l.telefon)}</a>` : `<div class="dzw-meta">brak numeru — dopisz w karcie leada</div>`}
+    ${l.nastepny ? `<div class="dzw-notka"><strong>Plan:</strong> ${esc(l.nastepny)}</div>` : ""}
+    ${l.notatka ? `<div class="dzw-notka">${esc(l.notatka)}</div>` : ""}
+    <div class="dzw-akcje">
+      <button class="primary" data-dzw="rozmowa">Rozmawiałem — zapisz wynik</button>
+      <button data-dzw="brak">Nie odebrał</button>
+      <button data-dzw="dalej">Pomiń</button>
+      <button data-dzw="edytuj" style="margin-left:auto">Karta leada</button>
+    </div>
+  </div>`;
+
+  document.querySelectorAll("[data-dzw]").forEach(b => b.onclick = () => {
+    const a = b.dataset.dzw;
+    if (a === "rozmowa") otworzKarteRozmowy(l.id);
+    else if (a === "edytuj") otworzLead(l.id);
+    else if (a === "dalej") { dzwIdx++; rysujDzwonie(); }
+    else if (a === "brak"){
+      const ll = D.leady.find(x=>x.id===l.id);
+      ll.historia = ll.historia || [];
+      ll.historia.unshift({ data:dzis(), typ:"brak", opis:"nie odebrał" });
+      ll.ostatni_ruch = dzis();
+      dzwIdx++;
+      wyslij(); rysuj();
+    }
+  });
+
+  document.getElementById("dzw-kolejka").innerHTML = kolejka.length > 1 ? `<div class="tablewrap"><table>
+    <thead><tr><th>Firma</th><th>Etap</th><th>Stan</th><th>Następny krok</th></tr></thead>
+    <tbody>${kolejka.map((x,i)=>`<tr style="cursor:pointer" data-skok="${i}" class="${i===dzwIdx?"now":""}">
+      <td class="lead">${esc(x.l.nazwa)}</td>
+      <td><span class="chip neutral">${esc(etapDef(x.l.etap).n)}</span></td>
+      <td><span class="chip ${x.s.stan==="gnije"?"crit":x.s.stan==="dzis"?"warn":"neutral"}">${esc(x.s.powod)}</span></td>
+      <td>${esc(x.l.nastepny||"—")}</td></tr>`).join("")}</tbody></table></div>` : "";
+  document.querySelectorAll("[data-skok]").forEach(tr => tr.onclick = () => { dzwIdx = Number(tr.dataset.skok); rysujDzwonie(); });
+}
+
+/* --- karta rozmowy --- */
+const PYTANIA = [
+  { k:"cena",   t:"Padła cena",            p:"„1990 netto, czyli 2447,70 z VAT-em” — obie liczby, nie jedna" },
+  { k:"termin", t:"Padł termin",           p:"14 dni roboczych od podpisu i pierwszej wpłaty" },
+  { k:"zakres", t:"Padł zakres",           p:"do 5 podstron, teksty piszemy my, domena i hosting na rok" },
+  { k:"decyzja",t:"Poprosiłeś o decyzję",  p:"„To co — ruszamy?” i cisza, aż on ją przerwie", klucz:true }
+];
+const WYNIKI = [
+  { k:"umowiona", n:"Umówiona prezentacja", etap:"umowiona", data:true,  krok:"Prezentacja NA ŻYWO + prośba o decyzję" },
+  { k:"oddzwon",  n:"Do oddzwonienia",      etap:"kontakt",  data:true,  krok:"Telefon — wrócić do tematu" },
+  { k:"czeka",    n:"Myśli, czeka na decyzję", etap:"decyzja", data:true, krok:"Telefon po decyzję" },
+  { k:"podpis",   n:"Podpisał",             etap:"podpis",   data:false, krok:"" },
+  { k:"odmowa",   n:"Odmowa",               etap:"przegrany",data:false, krok:"" }
+];
+let krLead = null, krOdhacz = {}, krWynik = null;
+
+function otworzKarteRozmowy(id){
+  krLead = id; krOdhacz = {}; krWynik = null;
+  const l = (D.leady||[]).find(x=>x.id===id); if (!l) return;
+  document.getElementById("kr-nazwa").textContent = l.nazwa;
+  document.getElementById("kr-etap").textContent = etapDef(l.etap).n;
+  document.getElementById("kr-tel").textContent = l.telefon || "";
+  document.getElementById("kr-alert").textContent = "";
+  rysujKarteRozmowy();
+  document.getElementById("modal-rozmowa").classList.add("on");
+}
+
+function rysujKarteRozmowy(){
+  document.getElementById("kr-odhacz").innerHTML = PYTANIA.map(q =>
+    `<label class="${krOdhacz[q.k]?"zazn":""} ${q.klucz?"klucz":""}">
+      <input type="checkbox" data-q="${q.k}" ${krOdhacz[q.k]?"checked":""}>
+      <span><span class="tyt">${q.t}</span><br><span class="pod">${esc(q.p)}</span></span>
+    </label>`).join("");
+  document.querySelectorAll("[data-q]").forEach(c => c.onchange = () => {
+    krOdhacz[c.dataset.q] = c.checked; rysujKarteRozmowy();
+  });
+
+  document.getElementById("kr-wyniki").innerHTML = WYNIKI.map(w =>
+    `<button class="mini ${w.k===krWynik?"primary":""}" data-w="${w.k}">${w.n}</button>`).join(" ");
+  document.querySelectorAll("[data-w]").forEach(b => b.onclick = () => { krWynik = b.dataset.w; rysujKarteRozmowy(); });
+
+  const w = WYNIKI.find(x=>x.k===krWynik);
+  const el = document.getElementById("kr-nastepny");
+  if (w && w.data){
+    const jutro = new Date(); jutro.setDate(jutro.getDate()+1);
+    el.innerHTML = `<div class="eyebrow" style="margin-bottom:10px">Następny krok — obowiązkowy</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <label class="f">Data<input type="date" id="kr-data" value="${iso(jutro)}"></label>
+        <label class="f">Godzina<input type="time" id="kr-godz"></label>
+      </div>
+      <label class="f">Co robimy<input type="text" id="kr-krok" value="${esc(w.krok)}"></label>
+      <p class="hint">Wpis z godziną trafia do kalendarza i wyśle przypomnienie na telefon.</p>`;
+  } else if (w && w.k === "podpis"){
+    el.innerHTML = `<div class="banner ok"><div class="banner-mark">Podpis</div><div>
+      <p>Dopiszę go do Kasy jako 1990 netto + 99 abonamentu. Kwotę i wpłaty poprawisz w zakładce Kasa.</p></div></div>`;
+  } else if (w){
+    el.innerHTML = `<p class="hint">Bez następnego kroku — lead idzie do przegranych.</p>`;
+  } else el.innerHTML = "";
+}
+
+document.getElementById("kr-anuluj").onclick = () => document.getElementById("modal-rozmowa").classList.remove("on");
+document.getElementById("kr-zapisz").onclick = () => {
+  const l = (D.leady||[]).find(x=>x.id===krLead); if (!l) return;
+  const al = document.getElementById("kr-alert");
+  const w = WYNIKI.find(x=>x.k===krWynik);
+  if (!w){ al.textContent = "Zaznacz, jak rozmowa się skończyła."; return; }
+
+  let data = "", godz = "", krok = w.krok;
+  if (w.data){
+    data = document.getElementById("kr-data").value;
+    godz = document.getElementById("kr-godz").value;
+    krok = document.getElementById("kr-krok").value.trim() || w.krok;
+    if (!data){ al.textContent = "Bez daty następnego kroku nie zapiszę. Lead bez daty jest martwy."; return; }
+    if (!godz){ al.textContent = "Wpisz godzinę — bez niej nie poleci przypomnienie."; return; }
+  }
+
+  // liczniki dnia
+  const r = dzienRek(dzis());
+  r.rozmowy = (Number(r.rozmowy)||0) + 1;
+  if (krOdhacz.decyzja) r.decyzje = (Number(r.decyzje)||0) + 1;
+  if (w.k === "umowiona") r.umowione = (Number(r.umowione)||0) + 1;
+  if (l.etap === "umowiona") r.odbyte = (Number(r.odbyte)||0) + 1;
+
+  // lead
+  l.etap = w.etap;
+  l.data_kroku = data || "";
+  l.godzina_kroku = godz || "";
+  l.nastepny = w.data ? krok : "";
+  l.ostatni_ruch = dzis();
+  l.historia = l.historia || [];
+  l.historia.unshift({ data:dzis(), typ:"rozmowa",
+    opis:`${w.n}${Object.keys(krOdhacz).filter(k=>krOdhacz[k]).length?" · padło: "+PYTANIA.filter(q=>krOdhacz[q.k]).map(q=>q.k).join(", "):" · nic konkretnego nie padło"}` });
+
+  // kalendarz
+  if (data && godz){
+    D.kalendarz = D.kalendarz || [];
+    D.kalendarz.push({ id:uid(), data, godzina:godz, klient:l.nazwa, co:krok, telefon:l.telefon||"", zrobione:false });
+  }
+
+  // podpis → klient w Kasie
+  if (w.k === "podpis"){
+    D.klienci = D.klienci || [];
+    D.klienci.push({ id:uid(), nazwa:l.nazwa, produkt:"Strona", netto:1990, abonament:99, data_podpisu:dzis(), wplaty:[] });
+  }
+
+  document.getElementById("modal-rozmowa").classList.remove("on");
+  dzwIdx++;
+  wyslij(); rysuj();
+};
+
+/* --- karta leada --- */
+let edytLead = null;
+function otworzLead(id){
+  edytLead = id || null;
+  const l = id ? (D.leady||[]).find(x=>x.id===id) : null;
+  document.getElementById("ld-tytul").textContent = l ? l.nazwa : "Nowy lead";
+  document.getElementById("ld-etap").innerHTML = ETAPY_LEAD.map(e =>
+    `<option value="${e.k}" ${l && (l.etap||"lead")===e.k?"selected":""}>${e.n} — ${e.opis}</option>`).join("");
+  document.getElementById("ld-nazwa").value = l ? l.nazwa : "";
+  document.getElementById("ld-tel").value = l ? (l.telefon||"") : "";
+  document.getElementById("ld-branza").value = l ? (l.branza||"") : "";
+  document.getElementById("ld-data").value = l ? (l.data_kroku||"") : "";
+  document.getElementById("ld-godz").value = l ? (l.godzina_kroku||"") : "";
+  document.getElementById("ld-krok").value = l ? (l.nastepny||"") : "";
+  document.getElementById("ld-notatka").value = l ? (l.notatka||"") : "";
+  document.getElementById("ld-alert").textContent = "";
+  document.getElementById("ld-usun").style.display = l ? "" : "none";
+  const h = (l && l.historia||[]).slice(0,6);
+  document.getElementById("ld-historia").innerHTML = h.length
+    ? `<div class="eyebrow" style="margin:14px 0 8px">Historia</div><ul class="plain">${h.map(x=>`<li>${esc(x.data)} — ${esc(x.opis)}</li>`).join("")}</ul>` : "";
+  document.getElementById("modal-lead").classList.add("on");
+}
+document.getElementById("pip-nowy").onclick = () => otworzLead(null);
+document.getElementById("ld-anuluj").onclick = () => document.getElementById("modal-lead").classList.remove("on");
+let potwLead = false;
+document.getElementById("ld-usun").onclick = function(){
+  if (!potwLead){ potwLead = true; this.textContent = "Na pewno usunąć?"; this.classList.add("primary");
+    setTimeout(()=>{ potwLead=false; this.textContent="Usuń"; this.classList.remove("primary"); },4000); return; }
+  potwLead = false; this.textContent="Usuń"; this.classList.remove("primary");
+  D.leady = (D.leady||[]).filter(x=>x.id!==edytLead);
+  document.getElementById("modal-lead").classList.remove("on");
+  wyslij(); rysuj();
+};
+document.getElementById("ld-zapisz").onclick = () => {
+  const nazwa = document.getElementById("ld-nazwa").value.trim();
+  const al = document.getElementById("ld-alert");
+  if (!nazwa){ al.textContent = "Nazwa firmy jest obowiązkowa."; return; }
+  const etap = document.getElementById("ld-etap").value;
+  const data = document.getElementById("ld-data").value;
+  const godz = document.getElementById("ld-godz").value;
+  if (etap === "umowiona" && (!data || !godz)){
+    al.textContent = "Umówiona prezentacja bez daty i godziny to nie jest umówiona prezentacja. Wpisz termin albo zmień etap."; return;
+  }
+  const pola = { nazwa, telefon:document.getElementById("ld-tel").value.trim(),
+    branza:document.getElementById("ld-branza").value.trim(), etap,
+    data_kroku:data, godzina_kroku:godz,
+    nastepny:document.getElementById("ld-krok").value.trim(),
+    notatka:document.getElementById("ld-notatka").value.trim(), ostatni_ruch:dzis() };
+  const l = (D.leady||[]).find(x=>x.id===edytLead);
+  if (l) Object.assign(l, pola);
+  else (D.leady = D.leady||[]).push({ id:uid(), utworzony:dzis(), historia:[], wartosc:3178, ...pola });
+  document.getElementById("modal-lead").classList.remove("on");
+  wyslij(); rysuj();
+};
+
+/* --- import --- */
+function parsujImport(txt){
+  return txt.split(/\r?\n/).map(w=>w.trim()).filter(Boolean).map(w=>{
+    const cz = w.split(/\t|;|,/).map(s=>s.trim()).filter(Boolean);
+    return { nazwa:cz[0]||"", telefon:cz[1]||"", branza:cz[2]||"" };
+  }).filter(x=>x.nazwa);
+}
+document.getElementById("dzw-import").onclick = () => {
+  document.getElementById("imp-tekst").value = "";
+  document.getElementById("imp-podglad").textContent = "";
+  document.getElementById("modal-import").classList.add("on");
+};
+document.getElementById("imp-anuluj").onclick = () => document.getElementById("modal-import").classList.remove("on");
+document.getElementById("imp-tekst").oninput = function(){
+  const p = parsujImport(this.value);
+  document.getElementById("imp-podglad").textContent = p.length
+    ? `Rozpoznanych firm: ${p.length}. Pierwsza: ${p[0].nazwa}${p[0].telefon?" — "+p[0].telefon:" (bez numeru)"}` : "";
+};
+document.getElementById("imp-dodaj").onclick = () => {
+  const p = parsujImport(document.getElementById("imp-tekst").value);
+  if (!p.length) return;
+  const sa = new Set((D.leady||[]).map(l=>l.nazwa.toLowerCase()));
+  let dodane = 0;
+  p.forEach(x => {
+    if (sa.has(x.nazwa.toLowerCase())) return;
+    (D.leady = D.leady||[]).push({ id:uid(), utworzony:dzis(), ostatni_ruch:dzis(), historia:[],
+      wartosc:3178, etap:"lead", data_kroku:"", godzina_kroku:"", nastepny:"", notatka:"", ...x });
+    dodane++;
+  });
+  document.getElementById("modal-import").classList.remove("on");
+  dzwIdx = 0;
+  wyslij(); rysuj();
+};
 
 /* ---------------- PROGRES (wykres) ---------------- */
 const METRYKI = [
@@ -1661,8 +2149,13 @@ function rysujDzis(przysz, naDzis){
   const poTerminie = (D.kalendarz||[]).filter(w => !w.zrobione && dtWpisu(w) < teraz);
   const nastepny = przysz.find(w => !w.zrobione && dtWpisu(w) >= teraz);
 
+  const gnij = (D.leady||[]).map(l=>({l,s:stanLeada(l)})).filter(x=>x.s.stan==="gnije");
+
   let nag, opis;
-  if (poTerminie.length) {
+  if (gnij.length) {
+    nag = `${gnij.length} ${gnij.length===1?"lead gnije":"leadów gnije"} — zacznij od ${gnij[0].l.nazwa}.`;
+    opis = `${gnij[0].l.nazwa}: ${gnij[0].s.powod}. Lead, który stoi dłużej niż wolno na swoim etapie, nie czeka — on umiera. Wejdź w Dzwonię i przerób kolejkę od góry.`;
+  } else if (poTerminie.length) {
     nag = `${poTerminie.length} ${poTerminie.length===1?"wpis":"wpisy"} po terminie — zacznij od ${poTerminie[0].klient}.`;
     opis = "Lead, którego termin minął, a nikt nie zadzwonił, jest martwy tak samo jak lead bez daty. Odhacz albo umów na nowo, zanim weźmiesz się za cokolwiek innego.";
   } else if (naDzis.length) {
@@ -1694,6 +2187,8 @@ function rysujDzis(przysz, naDzis){
       <div class="stat-note">${koniecMies - t.getDate()} dni do końca miesiąca</div></div>
     <div class="stat"><div class="stat-label">Rozmowy dziś</div><div class="stat-value">${rDzis.rozmowy||0}</div>
       <div class="stat-note">${sm.rozmowy} w tym miesiącu · ${rDzis.decyzje||0} ${(rDzis.decyzje||0)===1?"prośba":"próśb"} o decyzję</div></div>
+    <div class="stat ${gnij.length?"crit":""}"><div class="stat-label">Leady gniją</div><div class="stat-value">${gnij.length}</div>
+      <div class="stat-note">${(D.leady||[]).length} w pipelinie · ${leadyPilne().length} na dziś do telefonu</div></div>
     <div class="stat"><div class="stat-label">W kalendarzu</div><div class="stat-value">${przysz.filter(w=>!w.zrobione).length}</div>
       <div class="stat-note">umówionych na przyszłość · ${naDzis.length} na dziś</div></div>
     <div class="stat ok"><div class="stat-label">Wpłacone w tym miesiącu</div><div class="stat-value">${zl(s.wTymMies)}</div>
@@ -1710,6 +2205,8 @@ function rysuj(){
   rysujLiczniki(dzis(), "dzis-liczniki", true);
   rysujLiczby();
   rysujWykres();
+  rysujPipeline();
+  rysujDzwonie();
   stanPowiadomien();
 }
 
