@@ -863,7 +863,17 @@ function otworzWpis(id, data, godz){
   setTimeout(()=>document.getElementById("wp-klient").focus(), 50);
 }
 document.getElementById("wp-anuluj").onclick = () => document.getElementById("modal-wpis").classList.remove("on");
-document.getElementById("wp-usun").onclick = () => {
+let potwierdzUsun = false;
+document.getElementById("wp-usun").onclick = function(){
+  if (!potwierdzUsun) {
+    potwierdzUsun = true;
+    this.textContent = "Na pewno usunąć?";
+    this.classList.add("primary");
+    setTimeout(()=>{ potwierdzUsun = false; this.textContent = "Usuń"; this.classList.remove("primary"); }, 4000);
+    return;
+  }
+  potwierdzUsun = false;
+  this.textContent = "Usuń"; this.classList.remove("primary");
   D.kalendarz = (D.kalendarz||[]).filter(x => x.id !== edytowanyWpis);
   document.getElementById("modal-wpis").classList.remove("on");
   wyslij(); rysuj();
@@ -1235,7 +1245,17 @@ document.getElementById("w-dodaj").onclick = () => {
   (k.wplaty = k.wplaty || []).push({ data: document.getElementById("w-data").value || dzis(), kwota, opis: document.getElementById("w-opis").value.trim() });
   wyslij(); otworzWplaty(aktywnyKlient); rysuj();
 };
-document.getElementById("w-usun").onclick = () => {
+let potwierdzKlient = false;
+document.getElementById("w-usun").onclick = function(){
+  if (!potwierdzKlient) {
+    potwierdzKlient = true;
+    this.textContent = "Na pewno usunąć klienta?";
+    this.classList.add("primary");
+    setTimeout(()=>{ potwierdzKlient = false; this.textContent = "Usuń klienta"; this.classList.remove("primary"); }, 4000);
+    return;
+  }
+  potwierdzKlient = false;
+  this.textContent = "Usuń klienta"; this.classList.remove("primary");
   D.klienci = D.klienci.filter(x=>x.id!==aktywnyKlient);
   document.getElementById("modal-wplata").classList.remove("on");
   wyslij(); rysuj();
