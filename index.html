@@ -1357,9 +1357,10 @@ function dniOd(d){ if (!d) return 999; return Math.round((new Date(dzis()+"T00:0
 function stanLeada(l){
   const def = etapDef(l.etap);
   if (def.gnij === null) return { stan:"zamkniete", powod:def.n };
+  // hierarchia pilności: złamana obietnica > brak terminu tam, gdzie musi być > cisza
   if (l.data_kroku){
     const r = dniOd(l.data_kroku);
-    if (r > 0)  return { stan:"gnije", powod:`termin minął ${r} ${r===1?"dzień":"dni"} temu`, waga:1000+r };
+    if (r > 0)  return { stan:"gnije", powod:`termin minął ${r} ${r===1?"dzień":"dni"} temu`, waga:3000+r };
     if (r === 0) return { stan:"dzis", powod:`dziś${l.godzina_kroku?" o "+l.godzina_kroku:""}`, waga:500 };
     return { stan:"czeka", powod:`${l.data_kroku}${l.godzina_kroku?" "+l.godzina_kroku:""}`, waga:0 };
   }
@@ -1504,13 +1505,15 @@ function otworzKarteRozmowy(id){
 }
 
 function rysujKarteRozmowy(){
+  // odhaczanie nie przerysowuje reszty karty — inaczej kasowałoby wpisany termin
   document.getElementById("kr-odhacz").innerHTML = PYTANIA.map(q =>
     `<label class="${krOdhacz[q.k]?"zazn":""} ${q.klucz?"klucz":""}">
       <input type="checkbox" data-q="${q.k}" ${krOdhacz[q.k]?"checked":""}>
       <span><span class="tyt">${q.t}</span><br><span class="pod">${esc(q.p)}</span></span>
     </label>`).join("");
-  document.querySelectorAll("[data-q]").forEach(c => c.onchange = () => {
-    krOdhacz[c.dataset.q] = c.checked; rysujKarteRozmowy();
+  document.querySelectorAll("[data-q]").forEach(c => c.onchange = function(){
+    krOdhacz[this.dataset.q] = this.checked;
+    this.closest("label").classList.toggle("zazn", this.checked);
   });
 
   document.getElementById("kr-wyniki").innerHTML = WYNIKI.map(w =>
@@ -1520,11 +1523,14 @@ function rysujKarteRozmowy(){
   const w = WYNIKI.find(x=>x.k===krWynik);
   const el = document.getElementById("kr-nastepny");
   if (w && w.data){
+    // zachowaj to, co już wpisane, gdy zmienia się wynik rozmowy
+    const stareD = document.getElementById("kr-data")?.value;
+    const stareG = document.getElementById("kr-godz")?.value;
     const jutro = new Date(); jutro.setDate(jutro.getDate()+1);
     el.innerHTML = `<div class="eyebrow" style="margin-bottom:10px">Następny krok — obowiązkowy</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-        <label class="f">Data<input type="date" id="kr-data" value="${iso(jutro)}"></label>
-        <label class="f">Godzina<input type="time" id="kr-godz"></label>
+        <label class="f">Data<input type="date" id="kr-data" value="${esc(stareD || iso(jutro))}"></label>
+        <label class="f">Godzina<input type="time" id="kr-godz" value="${esc(stareG || "")}"></label>
       </div>
       <label class="f">Co robimy<input type="text" id="kr-krok" value="${esc(w.krok)}"></label>
       <p class="hint">Wpis z godziną trafia do kalendarza i wyśle przypomnienie na telefon.</p>`;
