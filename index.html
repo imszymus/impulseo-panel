@@ -67,9 +67,13 @@
 
   nav.tabs { display:flex; gap:3px; flex-wrap:wrap; margin-left:auto; background:var(--surface-2);
     border:1px solid var(--border); padding:3px; border-radius:999px; }
-  nav.tabs a { font-size:12.5px; font-weight:620; color:var(--muted); text-decoration:none;
-    padding:7px 13px; border-radius:999px; transition:all .15s; display:flex; align-items:center; gap:6px; white-space:nowrap; }
+  nav.tabs a { font-size:12px; font-weight:630; color:var(--muted); text-decoration:none;
+    padding:7px 11px; border-radius:999px; transition:all .15s; display:flex; align-items:center; gap:5px; white-space:nowrap; }
   nav.tabs a .ik { font-size:13px; opacity:.85; }
+  nav.tabs a.tylkoik .et { display:none; }
+  nav.tabs a.tylkoik { padding:7px 9px; }
+  nav.tabs a.tylkoik .ik { font-size:15px; }
+  nav.tabs .rozdziel { width:1px; background:var(--border-strong); margin:5px 4px; align-self:stretch; }
   nav.tabs a:hover { color:var(--text); background:var(--surface-3); }
   nav.tabs a.on { color:var(--ink); background:var(--lime); box-shadow:0 0 18px -4px var(--lime-glow); font-weight:730; }
   :root[data-theme="light"] nav.tabs a.on { color:#0B0D07; }
@@ -456,6 +460,13 @@
   .slot .wp span { overflow:hidden; text-overflow:ellipsis; }
 
   @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important; } }
+  @media (min-width:901px) {
+    .topbar-inner { flex-wrap:nowrap; }
+    nav.tabs { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; min-width:0; }
+    nav.tabs::-webkit-scrollbar { display:none; }
+    nav.tabs a { flex:0 0 auto; }
+    .syncdot { flex:0 0 auto; white-space:nowrap; }
+  }
   @media (max-width:900px) {
     nav.tabs { order:3; width:100%; margin-left:0; justify-content:flex-start; overflow-x:auto; flex-wrap:nowrap; }
     nav.tabs a { flex:none; }
@@ -487,10 +498,11 @@
       <a href="#/liczby" title="Liczby"><span class="ik">📊</span><span class="et">Liczby</span></a>
       <a href="#/progres" title="Progres"><span class="ik">📈</span><span class="et">Progres</span></a>
       <a href="#/kasa" title="Kasa"><span class="ik">💰</span><span class="et">Kasa</span></a>
-      <a href="#/konwersja" title="Technika domykania"><span class="ik">🧠</span><span class="et">Technika</span></a>
-      <a href="#/materialy" title="Materiały"><span class="ik">📚</span><span class="et">Materiały</span></a>
-      <a href="#/oferta" title="Oferta"><span class="ik">🏷️</span><span class="et">Oferta</span></a>
-      <a href="#/skrypty" title="Skrypty"><span class="ik">💬</span><span class="et">Skrypty</span></a>
+      <span class="rozdziel"></span>
+      <a href="#/konwersja" class="tylkoik" title="Technika domykania"><span class="ik">🧠</span><span class="et">Technika</span></a>
+      <a href="#/materialy" class="tylkoik" title="Materiały do nauki"><span class="ik">📚</span><span class="et">Materiały</span></a>
+      <a href="#/oferta" class="tylkoik" title="Oferta — ceny i zakres"><span class="ik">🏷️</span><span class="et">Oferta</span></a>
+      <a href="#/skrypty" class="tylkoik" title="Skrypty na obiekcje"><span class="ik">💬</span><span class="et">Skrypty</span></a>
     </nav>
     <button class="ikbtn" id="motyw" title="Jasny / ciemny">🌙</button>
     <button class="syncdot" id="syncbtn" title="Stan zapisu danych">…</button>
